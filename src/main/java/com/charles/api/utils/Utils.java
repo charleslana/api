@@ -4,7 +4,10 @@ import com.charles.api.model.dto.ResponseDTO;
 
 public class Utils {
 
-    public ResponseDTO responseSuccess(String message) {
+    Utils() {
+    }
+
+    public static ResponseDTO responseSuccess(String message) {
         ResponseDTO dto = new ResponseDTO();
         dto.setStatus("success");
         dto.setTimestamp(System.currentTimeMillis());

@@ -40,7 +40,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             try {
                 SecurityContextHolder.getContext().setAuthentication(processMethod(authorizationHeader));
             } catch (Exception e) {
-                log.warn("Authentication failed for token {}, caused by: {}", authorizationHeader, e.getCause());
+                log.warn("Authentication failed for token {}, caused by: {}", authorizationHeader, e.getMessage());
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 Map<String, String> error = new HashMap<>();
                 error.put("error_message", e.getMessage());

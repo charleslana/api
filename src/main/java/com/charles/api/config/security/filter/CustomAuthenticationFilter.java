@@ -3,11 +3,13 @@ package com.charles.api.config.security.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.charles.api.config.PropertiesConfig;
+import com.charles.api.model.dto.ResponseDTO;
 import com.charles.api.model.entity.Account;
 import com.charles.api.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,7 +50,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Algorithm algorithm = Algorithm.HMAC256(propertiesConfig.getSecret().getBytes());
         String accessToken = JWT.create().withSubject(user.getUsername()).withExpiresAt(new Date(System.currentTimeMillis() + 18000000)).sign(algorithm);
         Map<String, String> tokens = new HashMap<>();
-        Account account = service.getUserByEmail(user.getUsername());
+        Account account = service.getAccountByEmail(user.getUsername());
         tokens.put("accessToken", accessToken);
         tokens.put("email", account.getEmail());
         tokens.put("accountType", account.getRole().toString());
@@ -59,6 +61,15 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
-        response.setStatus(204);
+        log.info("Failed login to : {}", failed.getMessage());
+        ResponseDTO dto = new ResponseDTO();
+        dto.setStatus("error");
+        dto.setTimestamp(System.currentTimeMillis());
+        dto.setMessage("Credenciais inválidas");
+        ObjectMapper mapper = new ObjectMapper();
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(mapper.writeValueAsString(dto));
     }
 }

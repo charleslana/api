@@ -42,7 +42,7 @@ public class Account implements Serializable, UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "name", length = 20, nullable = false)
+    @Column(name = "name", length = 20, unique = true, nullable = false)
     private String name;
 
     @Column(name = "status", nullable = false)
