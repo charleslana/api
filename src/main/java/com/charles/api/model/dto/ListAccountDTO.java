@@ -15,4 +15,5 @@ public class ListAccountDTO implements Serializable {
     private Long id;
     private String email;
     private String name;
+    private ListAttributeDTO attribute;
 }

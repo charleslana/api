@@ -8,6 +8,7 @@ import com.charles.api.model.dto.ListAccountDTO;
 import com.charles.api.model.dto.ResponseDTO;
 import com.charles.api.model.dto.UpdateAccountDTO;
 import com.charles.api.model.entity.Account;
+import com.charles.api.model.entity.Attribute;
 import com.charles.api.model.enums.RoleEnum;
 import com.charles.api.model.enums.StatusEnum;
 import com.charles.api.repository.AccountRepository;
@@ -44,6 +45,7 @@ public class AccountService implements UserDetailsService {
         account.setPassword(encoder.encode(dto.getPassword()));
         account.setStatus(StatusEnum.ACTIVE);
         account.setRole(RoleEnum.USER);
+        account.setAttribute(getAttribute());
         repository.save(account);
         return Utils.responseSuccess("Conta criada com sucesso.");
     }
@@ -85,6 +87,18 @@ public class AccountService implements UserDetailsService {
         Account existsAccount = getAuthAccount();
         existsAccount.setName(dto.getName());
         return Utils.responseSuccess("Conta atualizada com sucesso.");
+    }
+
+    private Attribute getAttribute() {
+        Attribute attribute = new Attribute();
+        attribute.setStrength(1L);
+        attribute.setDefense(1L);
+        attribute.setLife(1L);
+        attribute.setEnergy(1L);
+        attribute.setAgility(1L);
+        attribute.setResistance(1L);
+        attribute.setIntelligence(1L);
+        return attribute;
     }
 
     private void validateExistsEmail(CreateAccountDTO dto) {
