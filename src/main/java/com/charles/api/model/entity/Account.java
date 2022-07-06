@@ -1,5 +1,7 @@
 package com.charles.api.model.entity;
 
+import com.charles.api.model.enums.RoleEnum;
+import com.charles.api.model.enums.StatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,8 +20,8 @@ import javax.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 @Getter
 @Setter
@@ -41,6 +45,14 @@ public class Account implements Serializable, UserDetails {
     @Column(name = "name", length = 20, nullable = false)
     private String name;
 
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
+
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RoleEnum role;
+
     @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -50,12 +62,12 @@ public class Account implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return new ArrayList<>();
     }
 
     @Override
     public String getUsername() {
-        return this.email;
+        return email;
     }
 
     @Override
@@ -75,6 +87,6 @@ public class Account implements Serializable, UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return StatusEnum.ACTIVE.equals(status);
     }
 }
