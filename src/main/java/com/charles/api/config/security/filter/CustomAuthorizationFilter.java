@@ -5,11 +5,15 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.charles.api.config.PropertiesConfig;
+import com.charles.api.config.exceptions.dto.ApiErrorDTO;
 import com.charles.api.service.AccountService;
+import com.charles.api.service.utils.LocaleUtils;
+import com.charles.api.service.utils.MessageUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,8 +26,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @NoArgsConstructor
@@ -32,6 +34,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     private PropertiesConfig propertiesConfig;
     private AccountService service;
+    private MessageSource ms;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -42,8 +45,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 log.warn("Authentication failed for token {}, caused by: {}", authorizationHeader, e.getMessage());
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                Map<String, String> error = new HashMap<>();
-                error.put("errorMessage", e.getMessage());
+                ApiErrorDTO error = new ApiErrorDTO(MessageUtils.ACCOUNT_EXCEPTION, e.getMessage(), null, ms, LocaleUtils.currentLocale());
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }

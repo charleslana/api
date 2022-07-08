@@ -5,6 +5,7 @@ import com.charles.api.config.security.filter.CustomAuthenticationFilter;
 import com.charles.api.config.security.filter.CustomAuthorizationFilter;
 import com.charles.api.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,6 +25,7 @@ public class SecurityConfig {
 
     private final PropertiesConfig propertiesConfig;
     private final AccountService service;
+    private final MessageSource ms;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -36,7 +38,7 @@ public class SecurityConfig {
         http.logout().deleteCookies("JSESSIONID");
         http.csrf().disable().authorizeRequests().anyRequest().permitAll().and().cors().configurationSource(request -> getCorsConfiguration());
         http.addFilter(new CustomAuthenticationFilter(authenticationManager(new AuthenticationConfiguration()), propertiesConfig, service));
-        http.addFilterBefore(new CustomAuthorizationFilter(propertiesConfig, service), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(propertiesConfig, service, ms), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

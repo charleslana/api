@@ -1,6 +1,6 @@
 package com.charles.api.service;
 
-import com.charles.api.config.exceptions.BusinessException;
+import com.charles.api.config.exceptions.BusinessRuleException;
 import com.charles.api.config.security.SecurityUtils;
 import com.charles.api.mapper.AccountMapper;
 import com.charles.api.model.dto.CreateAccountDTO;
@@ -13,9 +13,11 @@ import com.charles.api.model.enums.RoleEnum;
 import com.charles.api.model.enums.StatusEnum;
 import com.charles.api.repository.AccountRepository;
 import com.charles.api.service.interfaces.BasicService;
+import com.charles.api.service.utils.LocaleUtils;
 import com.charles.api.service.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -37,6 +39,7 @@ public class AccountService implements UserDetailsService, BasicService {
 
     private final BCryptPasswordEncoder encoder;
     private final AccountMapper mapper;
+    private final MessageSource ms;
     private final AccountRepository repository;
 
     public ResponseDTO create(CreateAccountDTO dto) {
@@ -70,13 +73,13 @@ public class AccountService implements UserDetailsService, BasicService {
     }
 
     @Override
-    public BusinessException getException(String message) {
-        return new BusinessException(MessageUtils.ACCOUNT_EXCEPTION, message);
+    public BusinessRuleException getException(String message) {
+        return new BusinessRuleException(MessageUtils.ACCOUNT_EXCEPTION, message);
     }
 
     @Override
     public ResponseDTO getSuccess(String message) {
-        return new ResponseDTO(MessageUtils.ACCOUNT_SUCCESS, message);
+        return new ResponseDTO(MessageUtils.ACCOUNT_SUCCESS, message, null, LocaleUtils.currentLocale(), ms);
     }
 
     public List<GrantedAuthority> getRoles(String email) {
