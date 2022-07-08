@@ -43,7 +43,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 log.warn("Authentication failed for token {}, caused by: {}", authorizationHeader, e.getMessage());
                 response.setStatus(HttpStatus.UNAUTHORIZED.value());
                 Map<String, String> error = new HashMap<>();
-                error.put("error_message", e.getMessage());
+                error.put("errorMessage", e.getMessage());
                 response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }

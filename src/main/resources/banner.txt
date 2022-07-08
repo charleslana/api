@@ -1,0 +1,10 @@
+${AnsiColor.BRIGHT_GREEN}
+   ______    __                      __                         ___     ____     ____
+  / ____/   / /_   ____ _   _____   / /  ___    _____          /   |   / __ \   /  _/
+ / /       / __ \ / __ `/  / ___/  / /  / _ \  / ___/         / /| |  / /_/ /   / /
+/ /___    / / / // /_/ /  / /     / /  /  __/ (__  )         / ___ | / ____/  _/ /
+\____/   /_/ /_/ \__,_/  /_/     /_/   \___/ /____/         /_/  |_|/_/      /___/
+${AnsiColor.BRIGHT_GREEN}
+${AnsiColor.BRIGHT_YELLOW}API by Charles Lana
+${AnsiColor.BRIGHT_BLUE}:: Running api service - Spring boot version :: ${spring-boot.version}
+${AnsiColor.CYAN}Powered by Charles Lana

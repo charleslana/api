@@ -1,4 +1,4 @@
-package com.charles.api.exceptions;
+package com.charles.api.config.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;

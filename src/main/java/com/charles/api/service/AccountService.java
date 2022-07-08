@@ -1,7 +1,7 @@
 package com.charles.api.service;
 
+import com.charles.api.config.exceptions.BusinessException;
 import com.charles.api.config.security.SecurityUtils;
-import com.charles.api.exceptions.BusinessException;
 import com.charles.api.mapper.AccountMapper;
 import com.charles.api.model.dto.CreateAccountDTO;
 import com.charles.api.model.dto.ListAccountDTO;
@@ -12,7 +12,8 @@ import com.charles.api.model.entity.Attribute;
 import com.charles.api.model.enums.RoleEnum;
 import com.charles.api.model.enums.StatusEnum;
 import com.charles.api.repository.AccountRepository;
-import com.charles.api.utils.Utils;
+import com.charles.api.service.interfaces.BasicService;
+import com.charles.api.service.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,7 +33,7 @@ import java.util.Objects;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AccountService implements UserDetailsService {
+public class AccountService implements UserDetailsService, BasicService {
 
     private final BCryptPasswordEncoder encoder;
     private final AccountMapper mapper;
@@ -47,16 +48,16 @@ public class AccountService implements UserDetailsService {
         account.setRole(RoleEnum.USER);
         account.setAttribute(getAttribute());
         repository.save(account);
-        return Utils.responseSuccess("Conta criada com sucesso.");
+        return getSuccess("account.created");
     }
 
     public ListAccountDTO get() {
         Account existsAccount = getAuthAccount();
-        return repository.findById(existsAccount.getId()).map(mapper::toListDto).orElseThrow(() -> new BusinessException("Conta não encontrada."));
+        return repository.findById(existsAccount.getId()).map(mapper::toListDto).orElseThrow(() -> getException("account.not.found"));
     }
 
     public Account getAccountByEmail(String email) {
-        return repository.findByEmail(email).orElseThrow(() -> new BusinessException(String.format("E-mail %s não encontrado.", email)));
+        return repository.findByEmail(email).orElseThrow(() -> getException("account.not.exists.email"));
     }
 
     public List<ListAccountDTO> getAll() {
@@ -66,6 +67,16 @@ public class AccountService implements UserDetailsService {
     public Account getAuthAccount() {
         String authEmail = SecurityUtils.getAuthEmail();
         return getAccountByEmail(authEmail);
+    }
+
+    @Override
+    public BusinessException getException(String message) {
+        return new BusinessException(MessageUtils.ACCOUNT_EXCEPTION, message);
+    }
+
+    @Override
+    public ResponseDTO getSuccess(String message) {
+        return new ResponseDTO(MessageUtils.ACCOUNT_SUCCESS, message);
     }
 
     public List<GrantedAuthority> getRoles(String email) {
@@ -86,7 +97,7 @@ public class AccountService implements UserDetailsService {
         validateExistsName(dto);
         Account existsAccount = getAuthAccount();
         existsAccount.setName(dto.getName());
-        return Utils.responseSuccess("Conta atualizada com sucesso.");
+        return getSuccess("account.updated");
     }
 
     private Attribute getAttribute() {
@@ -104,21 +115,21 @@ public class AccountService implements UserDetailsService {
     private void validateExistsEmail(CreateAccountDTO dto) {
         boolean existsEmail = repository.existsByEmail(dto.getEmail());
         if (existsEmail) {
-            throw new BusinessException("Email já está cadastrado.");
+            throw getException("account.exists.email");
         }
     }
 
     private void validateExistsName(UpdateAccountDTO dto) {
         boolean existsName = repository.existsByName(dto.getName());
         if (existsName && !Objects.equals(getAuthAccount().getName(), dto.getName())) {
-            throw new BusinessException("Nome já está em uso.");
+            throw getException("account.exists.name");
         }
     }
 
     private void validateExistsName(CreateAccountDTO dto) {
         boolean existsName = repository.existsByName(dto.getName());
         if (existsName) {
-            throw new BusinessException("Nome já está em uso.");
+            throw getException("account.exists.name");
         }
     }
 }

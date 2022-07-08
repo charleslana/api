@@ -3,7 +3,7 @@ package com.charles.api.config.security.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.charles.api.config.PropertiesConfig;
-import com.charles.api.model.dto.ResponseDTO;
+import com.charles.api.config.exceptions.dto.FieldErrorDTO;
 import com.charles.api.model.entity.Account;
 import com.charles.api.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,7 +53,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         Account account = service.getAccountByEmail(user.getUsername());
         tokens.put("accessToken", accessToken);
         tokens.put("email", account.getEmail());
-        tokens.put("accountType", account.getRole().toString());
+        tokens.put("role", account.getRole().toString());
         tokens.put("name", account.getName());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
@@ -62,14 +62,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         log.info("Failed login to : {}", failed.getMessage());
-        ResponseDTO dto = new ResponseDTO();
-        dto.setStatus("error");
-        dto.setTimestamp(System.currentTimeMillis());
-        dto.setMessage("Credenciais inválidas");
+        FieldErrorDTO error = new FieldErrorDTO(failed.getMessage(), failed.getLocalizedMessage());
         ObjectMapper mapper = new ObjectMapper();
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(mapper.writeValueAsString(dto));
+        response.getWriter().write(mapper.writeValueAsString(error));
     }
 }
