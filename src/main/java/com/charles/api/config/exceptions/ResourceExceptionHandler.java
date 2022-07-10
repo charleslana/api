@@ -1,7 +1,6 @@
 package com.charles.api.config.exceptions;
 
 import com.charles.api.config.exceptions.dto.ApiErrorDTO;
-import com.charles.api.service.utils.MessageUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,7 @@ public class ResourceExceptionHandler {
 
     @ExceptionHandler(BusinessRuleException.class)
     public ResponseEntity<ApiErrorDTO> errorBusiness(BusinessRuleException exception, Locale locale) {
-        ApiErrorDTO error = new ApiErrorDTO(MessageUtils.ACCOUNT_EXCEPTION, exception.getMessage(), null, ms, locale);
+        ApiErrorDTO error = new ApiErrorDTO(exception.getStatus(), exception.getMessage(), null, ms, locale);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 

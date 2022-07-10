@@ -6,7 +6,6 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,19 +16,13 @@ public class CreateAccountDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    @Null
-    private Long id;
-
-    @Email
+    @Email(message = "email should be valid")
     @NotNull
     @Size(max = 50)
     private String email;
 
+    @NotNull
     @NotBlank
     @Size(min = 6, max = 50)
     private String password;
-
-    @NotBlank
-    @Size(min = 3, max = 20)
-    private String name;
 }

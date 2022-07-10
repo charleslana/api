@@ -14,9 +14,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("select (count(a) > 0) from Account a where a.email = ?1")
     Boolean existsByEmail(String email);
 
-    @Query("select (count(a) > 0) from Account a where a.name = ?1")
-    Boolean existsByName(String name);
-
     @Query("select a from Account a where a.email = ?1")
     Optional<Account> findByEmail(String email);
 

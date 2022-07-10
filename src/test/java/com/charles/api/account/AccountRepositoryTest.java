@@ -1,6 +1,8 @@
 package com.charles.api.account;
 
 import com.charles.api.model.entity.Account;
+import com.charles.api.model.enums.RoleEnum;
+import com.charles.api.model.enums.StatusEnum;
 import com.charles.api.repository.AccountRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,12 +22,13 @@ class AccountRepositoryTest {
     AccountRepository repository;
 
     @Test
-    void testCreateUser() {
+    void testCreateAccount() {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         Account account = new Account();
         account.setEmail("example@example.com");
         account.setPassword(encoder.encode("123456"));
-        account.setName("Example");
+        account.setStatus(StatusEnum.ACTIVE);
+        account.setRole(RoleEnum.USER);
         Account savedAccount = repository.save(account);
         Assertions.assertNotNull(savedAccount);
         Assertions.assertTrue(savedAccount.getId() > 0);

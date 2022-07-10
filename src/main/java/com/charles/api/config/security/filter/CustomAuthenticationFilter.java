@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.charles.api.config.PropertiesConfig;
 import com.charles.api.config.exceptions.dto.ApiErrorDTO;
+import com.charles.api.model.dto.UserDetailsDTO;
 import com.charles.api.model.entity.Account;
 import com.charles.api.service.AccountService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
@@ -45,7 +46,8 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException {
-        User user = (User) authentication.getPrincipal();
+        UserDetailsDTO user = (UserDetailsDTO) authentication.getPrincipal();
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("Successful login to : {}", user.getUsername());
         Algorithm algorithm = Algorithm.HMAC256(propertiesConfig.getSecret().getBytes());
         String accessToken = JWT.create().withSubject(user.getUsername()).withExpiresAt(new Date(System.currentTimeMillis() + 18000000)).sign(algorithm);
@@ -54,7 +56,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         tokens.put("accessToken", accessToken);
         tokens.put("email", account.getEmail());
         tokens.put("role", account.getRole().toString());
-        tokens.put("name", account.getName());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }

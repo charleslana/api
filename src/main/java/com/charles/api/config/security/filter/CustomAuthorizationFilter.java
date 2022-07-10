@@ -39,7 +39,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+        if (SecurityContextHolder.getContext() == null && authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 SecurityContextHolder.getContext().setAuthentication(processMethod(authorizationHeader));
             } catch (Exception e) {

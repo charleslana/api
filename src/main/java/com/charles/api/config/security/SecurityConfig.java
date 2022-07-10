@@ -23,9 +23,9 @@ import java.util.Collections;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 
+    private final MessageSource ms;
     private final PropertiesConfig propertiesConfig;
     private final AccountService service;
-    private final MessageSource ms;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
