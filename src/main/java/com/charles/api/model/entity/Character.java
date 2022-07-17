@@ -22,6 +22,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -34,7 +35,7 @@ public class Character implements Serializable {
 
     @Id
     @SequenceGenerator(name = "character_sequence", sequenceName = "character_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "character_sequence")
     @Column(name = "id")
     private Long id;
 
@@ -54,6 +55,9 @@ public class Character implements Serializable {
 
     @Column(name = "level", nullable = false)
     private Long level;
+
+    @Column(name = "birth_date", nullable = false)
+    private LocalDate birthDate;
 
     @Column(name = "created_at")
     @CreationTimestamp
