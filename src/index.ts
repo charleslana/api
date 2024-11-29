@@ -19,7 +19,7 @@ app.get('/api', async (c) => {
 	return c.redirect('/api/v1/app');
 });
 
-app.get('/api/v1/c', async (c) => {
+app.get('/v1/c', async (c) => {
 	return c.redirect('/api/v1/app');
 });
 
