@@ -26,6 +26,7 @@
 		"wrangler": "^3.60.3"
 	},
 	"dependencies": {
+		"@hono-rate-limiter/cloudflare": "^0.2.1",
 		"@hono/zod-validator": "^0.4.1",
 		"@neondatabase/serverless": "^0.10.4",
 		"bcryptjs": "^2.4.3",

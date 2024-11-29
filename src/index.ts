@@ -6,9 +6,11 @@ import { appRoute } from '@/routes/app';
 import { userRoute } from '@/routes/user';
 import { userAgentMiddleware } from '@/middleware/user-agent-middleware';
 import { customLogger } from '@/middleware/custom-logger';
+// import { compress } from 'hono/compress';
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 
+// app.use(compress());
 app.use(logger(customLogger));
 app.use(dbMiddleware);
 app.use(userAgentMiddleware);
