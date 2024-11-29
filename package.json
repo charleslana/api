@@ -10,8 +10,7 @@
 		"cf-typegen": "wrangler types",
 		"db:generate": "drizzle-kit generate --dialect=postgresql --schema=./src/db/schema.ts",
 		"dbs:generate": "drizzle-kit generate",
-		"db:migrate": "tsx ./src/db/migrate.ts",
-		"dbl:migrate": "tsx ./src/db/migrate-local.ts"
+		"db:migrate": "tsx ./src/db/migrate.ts"
 	},
 	"devDependencies": {
 		"@cloudflare/vitest-pool-workers": "^0.5.2",
