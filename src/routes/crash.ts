@@ -2,7 +2,7 @@ import type { Env, Variables } from '@/lib/types';
 import { zValidator } from '@hono/zod-validator';
 import { Context, Hono } from 'hono';
 import { z } from 'zod';
-import { trackingApiGetUniqueACId } from '@/routes/crash-method';
+import { trackingApiGetUniqueACId } from '@/services/tracking-api-get-unique-ac-id';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 

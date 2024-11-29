@@ -20,6 +20,10 @@ app.get('/api', async (c) => {
 	return c.redirect('/api/v1/app');
 });
 
+app.route('/api/v1/app', appRoute);
+app.route('/api/v1/user', userRoute);
+app.route('/v1/c', crashRoute);
+
 app.notFound((c) => {
 	return c.html(`<!DOCTYPE html>
 <html lang="pt-BR">
@@ -65,9 +69,5 @@ app.notFound((c) => {
 </body>
 </html>`);
 });
-
-app.route('/api/v1/app', appRoute);
-app.route('/api/v1/user', userRoute);
-app.route('/v1/c', crashRoute);
 
 export default app;
