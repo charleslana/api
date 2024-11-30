@@ -3,6 +3,7 @@ import { zValidator } from '@hono/zod-validator';
 import { Context, Hono } from 'hono';
 import { z } from 'zod';
 import { trackingApiGetUniqueACId } from '@/services/tracking-api-get-unique-ac-id';
+import { adsApiEgpPurchase } from '@/services/ads-api-egp-purchase';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -20,7 +21,7 @@ crashRoute.post('/', zValidator('query', z.object({
 		console.log('Query param:', _session);
 		console.info('Body:', item);
 		console.info('end............');
-		const result = await handleMethod(c, method, jsonrpc, id, params);
+		const result = await handleMethod(c, method, jsonrpc, id, params, _session);
 		// console.info('Result', result);
 		return {
 			jsonrpc, id, result: {
@@ -32,7 +33,7 @@ crashRoute.post('/', zValidator('query', z.object({
 	// return c.json(arrayList.length > 1 ? results : results[0]);
 });
 
-async function handleMethod(c: Context, method: string, jsonrpc: string, id: number, params: object[]) {
+async function handleMethod(c: Context, method: string, jsonrpc: string, id: number, params: any[], session?: string) {
 	if (method === 'TrackingApi.getUniqueACId') {
 		return await trackingApiGetUniqueACId(c);
 	} else if (method === 'AppDatabaseApi.getAppDatabase') {
@@ -148,7 +149,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppCoreIdentityApi.authenticate') {
 		console.log('AppCoreIdentityApi.authenticate');
 	} else if (method === 'AdsApi.egpPurchase') {
-		console.log('AdsApi.egpPurchase');
+		return await adsApiEgpPurchase(c, params, session);
 	} else if (method === 'UnlockApi.unlockIsland') {
 		console.log('UnlockApi.unlockIsland');
 	} else if (method === 'QuestApi.reportQuestProgress') {
