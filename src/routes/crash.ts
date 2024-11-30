@@ -16,6 +16,10 @@ import {
 } from '@/services/handle-app-core-identity-api-get-authentication-info';
 import { handleAppCoreIdentityApiLogIn } from '@/services/handle-app-core-identity-api-log-in';
 import { handleAppCoreIdentityApiSignUp } from '@/services/handle-app-core-identity-api-sign-up';
+import { handleAppDatabaseApiGetAppDatabase } from '@/services/handle-app-database-api-get-app-database';
+import {
+	handleAppEmailAndPasswordIdentityApiCheckPassword
+} from '@/services/handle-app-email-and-password-identity-api-check-password';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -43,7 +47,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	if (method === 'TrackingApi.getUniqueACId') {
 		return await trackingApiGetUniqueACId(c);
 	} else if (method === 'AppDatabaseApi.getAppDatabase') {
-		console.log(method);
+		return await handleAppDatabaseApiGetAppDatabase(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ApplicationSettingsApi.getSettings') {
 		console.log('ApplicationSettingsApi.getSettings');
 	} else if (method === 'AppKingAccountApi.getCurrentAccount') {
@@ -105,7 +109,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'PackApi.claimPack') {
 		console.log('PackApi.claimPack');
 	} else if (method === 'AppEmailAndPasswordIdentityApi.authenticate') {
-		console.log('AppEmailAndPasswordIdentityApi.authenticate');
+		return await handleAppDatabaseApiGetAppDatabase(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.link') {
 		console.log('AppEmailAndPasswordIdentityApi.link');
 	} else if (method === 'ProductionApi.startProducer') {
@@ -147,7 +151,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'MiloGuildApi.kickMember') {
 		console.log('MiloGuildApi.kickMember');
 	} else if (method === 'AppEmailAndPasswordIdentityApi.checkPassword') {
-		console.log('AppEmailAndPasswordIdentityApi.checkPassword');
+		return await handleAppEmailAndPasswordIdentityApiCheckPassword(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.resetPassword') {
 		console.log('AppEmailAndPasswordIdentityApi.resetPassword');
 	} else if (method === 'AppCoreIdentityApi.signUp') {
