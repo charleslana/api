@@ -19,13 +19,13 @@ export const users = pgTable('users', {
 	name: varchar('name', { length: 20 }).notNull(),
 	signUpToken: text('signUpToken'),
 	signInToken: text('signInToken'),
-	signInCount: integer('signInCount').default(0),
+	signInCount: integer('signInCount').default(0).notNull(),
 	banned: boolean('banned'),
 	sessionKey: text('sessionKey'),
-	xp: integer('xp').default(0),
-	level: integer('level').default(0),
-	crashPointsEarned: integer('crashPointsEarned').default(0),
-	skinId: integer('skinId').default(81329),
+	xp: integer('xp').default(0).notNull(),
+	level: integer('level').default(0).notNull(),
+	crashPointsEarned: integer('crashPointsEarned').default(0).notNull(),
+	skinId: integer('skinId').default(81329).notNull(),
 	guildId: integer('guildId'),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at')
@@ -97,7 +97,7 @@ export const guildMembers = pgTable('guildMembers', {
 	id: serial('id').primaryKey(),
 	userId: integer('userId').unique().notNull().references(() => users.id, { onDelete: 'cascade' }),
 	guildId: integer('guildId').notNull().references(() => guilds.id, { onDelete: 'cascade' }),
-	status: integer('status').notNull().default(2),
+	status: integer('status').notNull().default(2).notNull(),
 	crashPoints: integer('crashPoints').notNull(),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at')
@@ -110,8 +110,8 @@ export const guilds = pgTable('guilds', {
 	name: varchar('name', { length: 32 }).notNull(),
 	description: varchar('description', { length: 120 }).notNull(),
 	badgeId: integer('badgeId').notNull(),
-	isApplicationRequired: boolean('isApplicationRequired').default(false),
-	maxNumMembers: integer('maxNumMembers').default(30),
+	isApplicationRequired: boolean('isApplicationRequired').default(false).notNull(),
+	maxNumMembers: integer('maxNumMembers').default(30).notNull(),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at')
 		.defaultNow()
@@ -122,7 +122,7 @@ export const inventories = pgTable('inventories', {
 	id: serial('id').primaryKey(),
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
 	itemTypeId: integer('itemTypeId').notNull(),
-	count: integer('count').default(0),
+	count: integer('count').default(0).notNull(),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at')
 		.defaultNow()
@@ -195,7 +195,7 @@ export const shopRotations = pgTable('shopRotations', {
 	timeLeft: timestamp('timeLeft').notNull(),
 	itemTypeId: integer('itemTypeId').notNull(),
 	count: integer('count').notNull(),
-	collected: boolean('collected').default(false)
+	collected: boolean('collected').default(false).notNull()
 });
 
 export const skins = pgTable('skins', {

@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import type { Env, Variables } from '@/lib/types';
 import { User } from '@/db/model';
 
-export async function genericUserSession(c: Context<{
+export async function getUserSession(c: Context<{
 	Bindings: Env,
 	Variables: Variables
 }>, session?: string): Promise<User | undefined> {
@@ -20,6 +20,6 @@ export async function genericUserSession(c: Context<{
 		return user;
 	} catch (error) {
 		console.error('Erro ao consultar o banco de dados:', error);
-		return;
+		throw error;
 	}
 }
