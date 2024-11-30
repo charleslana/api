@@ -4,6 +4,18 @@ import { Context, Hono } from 'hono';
 import { z } from 'zod';
 import { trackingApiGetUniqueACId } from '@/services/tracking-api-get-unique-ac-id';
 import { handleAdsApiEgpPurchase } from '@/services/handle-ads-api-egp-purchase';
+import { handleAppAbTestApiGetAppUserAbCases } from '@/services/handle-app-ab-test-api-get-app-user-ab-cases';
+import { handleAppApiNotifyAppStart } from '@/services/handle-app-api-notify-app-start';
+import {
+	handleAppClientCrashReportTrackCrashReport
+} from '@/services/handle-app-client-crash-report-track-crash-report';
+import { handleAppCommonCatalogApiGetCatalog } from '@/services/handle-app-common-catalog-api-get-catalog';
+import { handleAppCoreIdentityApiAuthenticate } from '@/services/handle-app-core-identity-api-authenticate';
+import {
+	handleAppCoreIdentityApiGetAuthenticationInfo
+} from '@/services/handle-app-core-identity-api-get-authentication-info';
+import { handleAppCoreIdentityApiLogIn } from '@/services/handle-app-core-identity-api-log-in';
+import { handleAppCoreIdentityApiSignUp } from '@/services/handle-app-core-identity-api-sign-up';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -37,31 +49,31 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppKingAccountApi.getCurrentAccount') {
 		console.log('AppKingAccountApi.getCurrentAccount');
 	} else if (method === 'AppApi.notifyAppStart') {
-		console.log('AppApi.notifyAppStart');
+		return await handleAppApiNotifyAppStart(c, method, jsonrpc, id, params, session);
 	} else if (method === 'OtaApi.selectPackageDescriptors') {
 		console.log('OtaApi.selectPackageDescriptors');
 	} else if (method === 'PushNotificationTokenApi.updatePushNotificationToken2') {
 		console.log('PushNotificationTokenApi.updatePushNotificationToken2');
 	} else if (method === 'AppCoreIdentityApi.logIn') {
-		console.log('AppCoreIdentityApi.logIn');
+		return await handleAppCoreIdentityApiLogIn(c, method, jsonrpc, id, params);
 	} else if (method === 'ServerAuthLiveOpsApi.getLiveOps') {
 		console.log('ServerAuthLiveOpsApi.getLiveOps');
 	} else if (method === 'AppAbTestApi.getAppUserAbCases') {
-		console.log('AppAbTestApi.getAppUserAbCases');
+		return await handleAppAbTestApiGetAppUserAbCases(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppKingAccountApi.acceptTermsOfServiceAndPrivacyPolicy') {
 		console.log('AppKingAccountApi.acceptTermsOfServiceAndPrivacyPolicy');
 	} else if (method === 'AppCoreIdentityApi.getAuthenticationInfo') {
-		console.log('AppCoreIdentityApi.getAuthenticationInfo');
+		return await handleAppCoreIdentityApiGetAuthenticationInfo(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppPermissionsApi.getConsents3') {
 		console.log('AppPermissionsApi.getConsents3');
 	} else if (method === 'AppTimeApi.getServerTime') {
 		console.log('AppTimeApi.getServerTime');
 	} else if (method === 'AppCommonCatalogApi.getCatalog') {
-		console.log('AppCommonCatalogApi.getCatalog');
+		return await handleAppCommonCatalogApiGetCatalog(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ConfigApi.getConfigEntriesCached') {
 		console.log('ConfigApi.getConfigEntriesCached');
 	} else if (method === 'AppClientCrashReport.trackCrashReport') {
-		console.log('AppClientCrashReport.trackCrashReport');
+		return await handleAppClientCrashReportTrackCrashReport(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.getCommonGuildSettings') {
 		console.log('MiloGuildApi.getCommonGuildSettings');
 	} else if (method === 'MiloGuildApi.getMyGuild') {
@@ -139,9 +151,9 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppEmailAndPasswordIdentityApi.resetPassword') {
 		console.log('AppEmailAndPasswordIdentityApi.resetPassword');
 	} else if (method === 'AppCoreIdentityApi.signUp') {
-		console.log('AppCoreIdentityApi.signUp');
+		return await handleAppCoreIdentityApiSignUp(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppCoreIdentityApi.authenticate') {
-		console.log('AppCoreIdentityApi.authenticate');
+		return await handleAppCoreIdentityApiAuthenticate(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AdsApi.egpPurchase') {
 		return await handleAdsApiEgpPurchase(c, method, jsonrpc, id, params, session);
 	} else if (method === 'UnlockApi.unlockIsland') {
