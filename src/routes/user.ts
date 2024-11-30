@@ -88,19 +88,19 @@ async function findUser(c: Context<{ Bindings: Env, Variables: Variables }>, id:
 	return user;
 }
 
-async function findUserByEmail(c: Context<{ Bindings: Env, Variables: Variables }>, email: string) {
+export async function findUserByEmail(c: Context<{ Bindings: Env, Variables: Variables }>, email: string) {
 	const db = c.get('db');
 	const [user] = await db.select().from(users).where(eq(lower(users.email), email.toLowerCase()));
 	return user;
 }
 
-async function findUserByName(c: Context<{ Bindings: Env, Variables: Variables }>, name: string) {
+export async function findUserByName(c: Context<{ Bindings: Env, Variables: Variables }>, name: string) {
 	const db = c.get('db');
 	const [user] = await db.select().from(users).where(eq(lower(users.name), name.toLowerCase()));
 	return user;
 }
 
-function generateUserName(): string {
+export function generateUserName(): string {
 	const randomNumbers = Math.floor(Math.random() * 10_000_000_000).toString().padStart(10, '0');
 	return `Player${randomNumbers}`;
 }

@@ -16,6 +16,7 @@
 		"@cloudflare/vitest-pool-workers": "^0.5.2",
 		"@cloudflare/workers-types": "^4.20241112.0",
 		"@types/bcryptjs": "^2.4.6",
+		"@types/validator": "^13.12.2",
 		"dotenv": "^16.4.5",
 		"drizzle-kit": "^0.28.1",
 		"pg": "^8.13.1",
@@ -32,6 +33,7 @@
 		"drizzle-orm": "^0.36.4",
 		"drizzle-zod": "^0.5.1",
 		"hono": "^4.6.12",
+		"validator": "^13.12.0",
 		"zod": "^3.23.8"
 	}
 }

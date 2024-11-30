@@ -23,6 +23,11 @@ app.get('/api', async (c) => {
 app.route('/api/v1/app', appRoute);
 // app.route('/api/v1/user', userRoute);
 app.route('/v1/c', crashRoute);
+app.get('/v1/events/cotr', async (c) => {
+	return c.json({
+		message: 'Ok'
+	});
+});
 
 app.notFound((c) => {
 	return c.html(`<!DOCTYPE html>

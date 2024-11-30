@@ -20,6 +20,7 @@ import { handleAppDatabaseApiGetAppDatabase } from '@/services/handle-app-databa
 import {
 	handleAppEmailAndPasswordIdentityApiCheckPassword
 } from '@/services/handle-app-email-and-password-identity-api-check-password';
+import { handleAppEmailAndPasswordIdentityApiLink } from '@/services/handle-app-email-and-password-identity-api-link';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -111,7 +112,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppEmailAndPasswordIdentityApi.authenticate') {
 		return await handleAppDatabaseApiGetAppDatabase(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.link') {
-		console.log('AppEmailAndPasswordIdentityApi.link');
+		return await handleAppEmailAndPasswordIdentityApiLink(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.startProducer') {
 		console.log('ProductionApi.startProducer');
 	} else if (method === 'ProductionApi.collectProducer') {

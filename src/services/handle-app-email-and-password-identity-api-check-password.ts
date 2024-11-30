@@ -14,7 +14,7 @@ export async function handleAppEmailAndPasswordIdentityApiCheckPassword(c: Conte
 			return returnGenericError(jsonrpc, id);
 		}
 		const password = params[0] as string;
-		if (!params) {
+		if (!password) {
 			return returnGenericError(jsonrpc, id);
 		}
 		const hashedPassword = await verifyPassword(password, user.password);
