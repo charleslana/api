@@ -32,7 +32,6 @@ export async function handleMiloGuildApiGetGuild(c: Context<{
 		const guildRankSubquery = db
 			.select({
 				guildId: guilds.id,
-				totalCrashPoints: sql`SUM(${users.crashPointsEarned})`.as('totalCrashPoints'),
 				rank: sql`RANK() OVER (ORDER BY SUM(${users.crashPointsEarned}) DESC)`.as('rank'),
 			})
 			.from(guilds)
