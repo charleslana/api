@@ -24,8 +24,8 @@ export async function handleAppDatabaseApiGetAppDatabase(c: Context<{
 		if (!user || user.banned) {
 			return returnAuthenticationToken(jsonrpc, id, coreUserId, params, authenticationToken);
 		}
-		const hashedPassword = await verifyPassword(password, user.password);
-		if (!hashedPassword) {
+		const verifiedPassword = await verifyPassword(password, user.password);
+		if (!verifiedPassword) {
 			return returnAuthenticationToken(jsonrpc, id, coreUserId, params, authenticationToken);
 		}
 		coreUserId = user.id;

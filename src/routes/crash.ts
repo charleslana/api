@@ -21,6 +21,15 @@ import {
 	handleAppEmailAndPasswordIdentityApiCheckPassword
 } from '@/services/handle-app-email-and-password-identity-api-check-password';
 import { handleAppEmailAndPasswordIdentityApiLink } from '@/services/handle-app-email-and-password-identity-api-link';
+import {
+	handleAppEmailAndPasswordIdentityApiResetPassword
+} from '@/services/handle-app-email-and-password-identity-api-reset-password';
+import {
+	handleAppEmailAndPasswordIdentityApiUpdateEmailAddress
+} from '@/services/handle-app-email-and-password-identity-api-update-email-address';
+import {
+	handleAppEmailAndPasswordIdentityApiUpdatePassword
+} from '@/services/handle-app-email-and-password-identity-api-update-password';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -154,7 +163,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppEmailAndPasswordIdentityApi.checkPassword') {
 		return await handleAppEmailAndPasswordIdentityApiCheckPassword(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.resetPassword') {
-		console.log('AppEmailAndPasswordIdentityApi.resetPassword');
+		return await handleAppEmailAndPasswordIdentityApiResetPassword(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppCoreIdentityApi.signUp') {
 		return await handleAppCoreIdentityApiSignUp(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppCoreIdentityApi.authenticate') {
@@ -182,9 +191,9 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppKingAccountApi.updateCurrentAccount') {
 		console.log('AppKingAccountApi.updateCurrentAccount');
 	} else if (method === 'AppEmailAndPasswordIdentityApi.updateEmailAddress') {
-		console.log('AppEmailAndPasswordIdentityApi.updateEmailAddress');
+		return await handleAppEmailAndPasswordIdentityApiUpdateEmailAddress(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.updatePassword') {
-		console.log('AppEmailAndPasswordIdentityApi.updatePassword');
+		return await handleAppEmailAndPasswordIdentityApiUpdatePassword(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.buyProducerMissingResources') {
 		console.log('ProductionApi.buyProducerMissingResources');
 	} else if (method === 'InventoryApi.sellItems') {
