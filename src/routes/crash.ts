@@ -61,7 +61,7 @@ crashRoute.post('/', zValidator('query', z.object({
 		const { jsonrpc, id, method, params } = item;
 		console.info('start request ----------');
 		console.log('Header:', c.req.header());
-		console.log('Query param:', _session);
+		console.log('Query session param:', _session);
 		console.info('Body:', JSON.stringify(item, null, 2));
 		console.info('end request ------------');
 		return await handleMethod(c, method, jsonrpc, id, params, _session);

@@ -7,7 +7,8 @@ import {
 	text,
 	timestamp,
 	uniqueIndex,
-	varchar
+	varchar,
+	bigint
 } from 'drizzle-orm/pg-core';
 import { SQL, sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
@@ -89,7 +90,7 @@ export const groupChats = pgTable('groupChats', {
 	id: serial('id').primaryKey(),
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
 	guildId: integer('guildId').notNull(),
-	timestampMs: integer('timestampMs').notNull(),
+	timestampMs: bigint('timestampMs', { mode: 'number' }).notNull(),
 	body: varchar('body', { length: 240 }).notNull()
 });
 

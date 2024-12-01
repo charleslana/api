@@ -25,7 +25,6 @@ export async function handleMiloGuildApiCreateGuild(c: Context<{
 		const [inventory] = await db.select().from(inventories)
 			.where(and(eq(inventories.userId, user.id), eq(inventories.itemTypeId, 81000), gte(inventories.count, 10)));
 		if (!inventory) {
-			console.log('entrou aqui');
 			return returnGenericError(jsonrpc, id);
 		}
 		const [newGuild] = await db.insert(guilds).values({
