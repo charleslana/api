@@ -2,12 +2,13 @@ import { Context } from 'hono';
 import type { Env, Variables } from '@/lib/types';
 import { getUserSession } from '@/services/get-user-session';
 import { returnGenericError } from '@/shared/return-generic-error';
-import { findUserByEmail, verifyPassword } from '@/routes/user';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { validateEmail } from '@/utils/utils';
+import { StateCurrentAccountParams } from '@/interfaces/state-params';
+import { findUserByName } from '@/routes/user';
+import { validateName } from '@/utils/utils';
 
-export async function handleAppEmailAndPasswordIdentityApiUpdateEmailAddress(c: Context<{
+export async function handleAppKingAccountApiUpdateCurrentAccount(c: Context<{
 	Bindings: Env, Variables: Variables
 }>, method: string, jsonrpc: string, id: number, params: any[], session?: string) {
 	const db = c.get('db');
@@ -16,21 +17,17 @@ export async function handleAppEmailAndPasswordIdentityApiUpdateEmailAddress(c: 
 		if (!user) {
 			return returnGenericError(jsonrpc, id);
 		}
-		const email = params[1] as string;
-		const password = params[2] as string;
-		if (!email || !password || !validateEmail(email) || email.length > 50 || user.email.toLowerCase() === email.toLowerCase()) {
+		const state = params[0] as StateCurrentAccountParams;
+		if (!state || !state.name.trim() || state.name.trim().length < 3 || state.name.trim().length > 20 || !validateName(state.name) || user.name === state.name.trim()) {
 			return returnGenericError(jsonrpc, id);
 		}
-		const [verifiedPassword, existingEmail] = await Promise.all([
-			verifyPassword(password, user.password),
-			findUserByEmail(c, email),
-		]);
-		if (!verifiedPassword || existingEmail) {
+		const existingName = await findUserByName(c, state.name);
+		if (existingName) {
 			return returnGenericError(jsonrpc, id);
 		}
 		await db
 			.update(users)
-			.set({ email })
+			.set({name: state.name.trim()})
 			.where(eq(users.id, user.id));
 		return {
 			jsonrpc,

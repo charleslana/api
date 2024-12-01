@@ -5,3 +5,7 @@ export interface StateInventoryParams {
 		items?: Inventory[];
 	};
 }
+
+export interface StateCurrentAccountParams {
+	name: string;
+}

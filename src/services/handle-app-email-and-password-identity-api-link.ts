@@ -12,7 +12,7 @@ export async function handleAppEmailAndPasswordIdentityApiLink(c: Context<{
 	try {
 		const email = params[0] as string;
 		const password = params[1] as string;
-		if (!email || !password || !validateEmail(email)) {
+		if (!email || !password || !validateEmail(email) || email.length > 50) {
 			return returnGenericError(jsonrpc, id);
 		}
 		const name = generateUserName();

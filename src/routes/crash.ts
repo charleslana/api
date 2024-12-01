@@ -34,6 +34,9 @@ import {
 	handleAppKingAccountApiAcceptTermsOfServiceAndPrivacyPolicy
 } from '@/services/handle-app-king-account-api-accept-terms-of-service-and-privacy-policy';
 import { handleAppKingAccountApiGetCurrentAccount } from '@/services/handle-app-king-account-api-get-current-account';
+import {
+	handleAppKingAccountApiUpdateCurrentAccount
+} from '@/services/handle-app-king-account-api-update-current-account';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -193,7 +196,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'StateApi.completeState') {
 		console.log('StateApi.completeState');
 	} else if (method === 'AppKingAccountApi.updateCurrentAccount') {
-		console.log('AppKingAccountApi.updateCurrentAccount');
+		return await handleAppKingAccountApiUpdateCurrentAccount(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.updateEmailAddress') {
 		return await handleAppEmailAndPasswordIdentityApiUpdateEmailAddress(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.updatePassword') {

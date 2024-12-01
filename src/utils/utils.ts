@@ -15,3 +15,7 @@ export function validateEmail(email: string): boolean {
 	return validator.isEmail(email);
 }
 
+export function validateName(name: string): boolean {
+	const nameRegex = /^[\p{L}\p{N}\s]+$/u;
+	return validator.matches(name, nameRegex);
+}
