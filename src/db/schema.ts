@@ -108,7 +108,7 @@ export const guildMembers = pgTable('guildMembers', {
 
 export const guilds = pgTable('guilds', {
 	id: serial('id').primaryKey(),
-	name: varchar('name', { length: 32 }).notNull(),
+	name: varchar('name', { length: 32 }).unique().notNull(),
 	description: varchar('description', { length: 120 }).notNull(),
 	badgeId: integer('badgeId').notNull(),
 	isApplicationRequired: boolean('isApplicationRequired').default(false).notNull(),

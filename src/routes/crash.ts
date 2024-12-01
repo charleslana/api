@@ -47,6 +47,11 @@ import { handleGroupChatApiPostAndPoll } from '@/services/handle-group-chat-api-
 import { handleGroupChatApiReportAbusiveMessage } from '@/services/handle-group-chat-api-report-abusive-message';
 import { handleInventoryApiSellItems } from '@/services/handle-inventory-api-sell-items';
 import { handleMiloGuildApiCreateGuild } from '@/services/handle-milo-guild-api-create-guild';
+import { handleMiloGuildApiGetCommonGuildSettings } from '@/services/handle-milo-guild-api-get-common-guild-settings';
+import {
+	handleMiloGuildApiGetGuildJoinCooldownLeft
+} from '@/services/handle-milo-guild-api-get-guild-join-cooldown-left';
+import { handleMiloGuildApiGetGuild } from '@/services/handle-milo-guild-api-get-guild';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -107,7 +112,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppClientCrashReport.trackCrashReport') {
 		return await handleAppClientCrashReportTrackCrashReport(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.getCommonGuildSettings') {
-		console.log('MiloGuildApi.getCommonGuildSettings');
+		return await handleMiloGuildApiGetCommonGuildSettings(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.getMyGuild') {
 		console.log('MiloGuildApi.getMyGuild');
 	} else if (method === 'UnlockApi.unlockBuildings') {
@@ -123,7 +128,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ShopApi.deliverOpenTransactions') {
 		console.log('ShopApi.deliverOpenTransactions');
 	} else if (method === 'MiloGuildApi.getGuildJoinCooldownLeft') {
-		console.log('MiloGuildApi.getGuildJoinCooldownLeft');
+		return await handleMiloGuildApiGetGuildJoinCooldownLeft(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.suggestGuilds2') {
 		console.log('MiloGuildApi.suggestGuilds2');
 	} else if (method === 'MiloGuildApi.createGuild') {
@@ -167,7 +172,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppStoreApi.createJournal4') {
 		return await handleAppStoreApiCreateJournal4(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.getGuild') {
-		console.log('MiloGuildApi.getGuild');
+		return await handleMiloGuildApiGetGuild(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.joinGuild') {
 		console.log('MiloGuildApi.joinGuild');
 	} else if (method === 'MiloGuildApi.reportAbusiveContent') {

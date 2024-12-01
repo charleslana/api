@@ -23,7 +23,7 @@ export async function updateInventory(c: Context<{
 			return;
 		}
 		const promises = state.inventoryDiff.items.map(async (item) => {
-			await applyUpdateInventory(c, user, item);
+			return await applyUpdateInventory(c, user, item);
 		});
 		const results = await Promise.all(promises);
 		return results.flat();
