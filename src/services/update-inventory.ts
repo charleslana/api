@@ -21,7 +21,7 @@ export async function updateInventory(c: Context<{
 		if (!state.inventoryDiff || !state.inventoryDiff.items || !state.inventoryDiff.items.length) {
 			return;
 		}
-		const updatePromises = state.inventoryDiff.items.map(async (item) => {
+		const promises = state.inventoryDiff.items.map(async (item) => {
 			const [existingItem] = await db
 				.select()
 				.from(inventories)
@@ -48,7 +48,7 @@ export async function updateInventory(c: Context<{
 				}
 			}
 		});
-		const results = await Promise.all(updatePromises);
+		const results = await Promise.all(promises);
 		return results.flat();
 	} catch (error) {
 		console.error('Erro ao processar informação:', error);

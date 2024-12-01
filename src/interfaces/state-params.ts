@@ -1,4 +1,4 @@
-import { Inventory } from '@/db/model';
+import { Building, Inventory, PowerGem } from '@/db/model';
 
 export interface StateInventoryParams {
 	inventoryDiff?: {
@@ -7,5 +7,21 @@ export interface StateInventoryParams {
 }
 
 export interface StateCurrentAccountParams {
-	name: string;
+	name?: string;
+}
+
+export interface StateBuildingParams {
+	progressDiff?: {
+		buildingProgress?: Building[];
+	};
+}
+
+export interface StateProgressParams {
+	skinId?: number;
+	progressDiff?: {
+		xp?: number;
+		level?: number;
+		crashPointsEarned?: number;
+		powerGems?: PowerGem[];
+	};
 }
