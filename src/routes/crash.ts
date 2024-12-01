@@ -38,6 +38,10 @@ import {
 	handleAppKingAccountApiUpdateCurrentAccount
 } from '@/services/handle-app-king-account-api-update-current-account';
 import { handleAppPermissionsApiGetConsents3 } from '@/services/handle-app-permissions-api-get-consents-3';
+import { handleAppStoreApiCreateJournal4 } from '@/services/handle-app-store-api-create-journal-4';
+import { handleAppTimeApiGetServerTime } from '@/services/handle-app-time-api-get-server-time';
+import { handleApplicationSettingsApiGetSettings } from '@/services/handle-application-settings-api-get-settings';
+import { handleConfigApiGetConfigEntriesCached } from '@/services/handle-config-api-get-config-entries-cached';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -68,7 +72,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppDatabaseApi.getAppDatabase') {
 		return await handleAppDatabaseApiGetAppDatabase(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ApplicationSettingsApi.getSettings') {
-		console.log('ApplicationSettingsApi.getSettings');
+		return await handleApplicationSettingsApiGetSettings(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppKingAccountApi.getCurrentAccount') {
 		return await handleAppKingAccountApiGetCurrentAccount(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppApi.notifyAppStart') {
@@ -90,11 +94,11 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppPermissionsApi.getConsents3') {
 		return await handleAppPermissionsApiGetConsents3(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppTimeApi.getServerTime') {
-		console.log('AppTimeApi.getServerTime');
+		return await handleAppTimeApiGetServerTime(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppCommonCatalogApi.getCatalog') {
 		return await handleAppCommonCatalogApiGetCatalog(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ConfigApi.getConfigEntriesCached') {
-		console.log('ConfigApi.getConfigEntriesCached');
+		return await handleConfigApiGetConfigEntriesCached(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppClientCrashReport.trackCrashReport') {
 		return await handleAppClientCrashReportTrackCrashReport(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.getCommonGuildSettings') {
@@ -156,7 +160,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'MiloGuildApi.searchGuilds') {
 		console.log('MiloGuildApi.searchGuilds');
 	} else if (method === 'AppStoreApi.createJournal4') {
-		console.log('AppStoreApi.createJournal4');
+		return await handleAppStoreApiCreateJournal4(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.getGuild') {
 		console.log('MiloGuildApi.getGuild');
 	} else if (method === 'MiloGuildApi.joinGuild') {
