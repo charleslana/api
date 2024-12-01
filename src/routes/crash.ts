@@ -53,6 +53,8 @@ import {
 } from '@/services/handle-milo-guild-api-get-guild-join-cooldown-left';
 import { handleMiloGuildApiGetGuild } from '@/services/handle-milo-guild-api-get-guild';
 import { handleMiloGuildApiGetMyGuild } from '@/services/handle-milo-guild-api-get-my-guild';
+import { handleMiloGuildApiJoinGuild } from '@/services/handle-milo-guild-api-join-guild';
+import { handleMiloGuildApiKickMember } from '@/services/handle-milo-guild-api-kick-member';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -177,7 +179,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'MiloGuildApi.getGuild') {
 		return await handleMiloGuildApiGetGuild(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.joinGuild') {
-		console.log('MiloGuildApi.joinGuild');
+		return await handleMiloGuildApiJoinGuild(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.reportAbusiveContent') {
 		console.log('MiloGuildApi.reportAbusiveContent');
 	} else if (method === 'ProfileApi.getPlayerStats') {
@@ -185,7 +187,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProfileApi.reportPlayer') {
 		console.log('ProfileApi.reportPlayer');
 	} else if (method === 'MiloGuildApi.kickMember') {
-		console.log('MiloGuildApi.kickMember');
+		return await handleMiloGuildApiKickMember(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.checkPassword') {
 		return await handleAppEmailAndPasswordIdentityApiCheckPassword(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.resetPassword') {

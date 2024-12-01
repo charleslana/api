@@ -41,3 +41,7 @@ export interface StateCreateGuildParams {
 	guildDescription?: string;
 	guildBadge?: number;
 }
+
+export interface StateJoinGuildParams {
+	guildId?: number;
+}
