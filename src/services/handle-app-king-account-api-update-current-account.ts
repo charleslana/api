@@ -18,7 +18,7 @@ export async function handleAppKingAccountApiUpdateCurrentAccount(c: Context<{
 			return returnGenericError(jsonrpc, id);
 		}
 		const state = params[0] as StateCurrentAccountParams;
-		if (!state || !state.name.trim() || state.name.trim().length < 3 || state.name.trim().length > 20 || !validateName(state.name) || user.name === state.name.trim()) {
+		if (!state || !state.name || state.name.trim().length < 3 || state.name.trim().length > 20 || !validateName(state.name) || user.name === state.name.trim()) {
 			return returnGenericError(jsonrpc, id);
 		}
 		const existingName = await findUserByName(c, state.name);

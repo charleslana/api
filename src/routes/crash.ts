@@ -37,6 +37,7 @@ import { handleAppKingAccountApiGetCurrentAccount } from '@/services/handle-app-
 import {
 	handleAppKingAccountApiUpdateCurrentAccount
 } from '@/services/handle-app-king-account-api-update-current-account';
+import { handleAppPermissionsApiGetConsents3 } from '@/services/handle-app-permissions-api-get-consents-3';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -49,13 +50,14 @@ crashRoute.post('/', zValidator('query', z.object({
 	const arrayList = c.req.valid('json');
 	const results = await Promise.all(arrayList.map(async (item) => {
 		const { jsonrpc, id, method, params } = item;
-		console.info('start..........');
+		console.info('start request ----------');
 		console.log('Header:', c.req.header());
 		console.log('Query param:', _session);
 		console.info('Body:', JSON.stringify(item, null, 2));
-		console.info('end............');
+		console.info('end request ------------');
 		return await handleMethod(c, method, jsonrpc, id, params, _session);
 	}));
+	// console.info('Body response:', JSON.stringify(results, null, 2));
 	return c.json(results);
 	// return c.json(arrayList.length > 1 ? results : results[0]);
 });
@@ -86,7 +88,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppCoreIdentityApi.getAuthenticationInfo') {
 		return await handleAppCoreIdentityApiGetAuthenticationInfo(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppPermissionsApi.getConsents3') {
-		console.log('AppPermissionsApi.getConsents3');
+		return await handleAppPermissionsApiGetConsents3(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppTimeApi.getServerTime') {
 		console.log('AppTimeApi.getServerTime');
 	} else if (method === 'AppCommonCatalogApi.getCatalog') {
