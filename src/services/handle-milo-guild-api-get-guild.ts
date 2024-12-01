@@ -69,6 +69,7 @@ export async function handleMiloGuildApiGetGuild(c: Context<{
 		state.name = guildDetails.guild.name;
 		state.description = guildDetails.guild.description;
 		state.numMembers = guildDetails.totalMembers as number;
+		state.maxNumMembers = guildDetails.guild.maxNumMembers;
 		state.editableProperties[0].value = guildDetails.guild.badgeId.toString();
 		state.computedProperties[4].value = (guildDetails.totalCrashPoints as number).toString();
 		state.computedProperties[2].value = (guildDetails.rank as number).toString();
