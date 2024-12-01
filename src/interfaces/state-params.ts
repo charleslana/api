@@ -27,10 +27,17 @@ export interface StateProgressParams {
 }
 
 export interface StatePostAndPollParams {
-	id: number;
-	type: number;
-	headers: any[];
-	senderId: number;
-	timestampMs: number;
-	body: string;
+	id?: number;
+	type?: number;
+	headers?: any[];
+	senderId?: number;
+	timestampMs?: number;
+	body?: string;
+}
+
+export interface StateCreateGuildParams {
+	teamConfigId?: string;
+	guildName?: string;
+	guildDescription?: string;
+	guildBadge?: number;
 }

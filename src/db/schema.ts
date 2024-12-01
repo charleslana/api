@@ -98,7 +98,7 @@ export const guildMembers = pgTable('guildMembers', {
 	userId: integer('userId').unique().notNull().references(() => users.id, { onDelete: 'cascade' }),
 	guildId: integer('guildId').notNull().references(() => guilds.id, { onDelete: 'cascade' }),
 	status: integer('status').notNull().default(2).notNull(),
-	crashPoints: integer('crashPoints').notNull(),
+	crashPoints: integer('crashPoints').default(0).notNull(),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at')
 		.defaultNow()

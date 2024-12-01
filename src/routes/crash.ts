@@ -44,6 +44,9 @@ import { handleApplicationSettingsApiGetSettings } from '@/services/handle-appli
 import { handleConfigApiGetConfigEntriesCached } from '@/services/handle-config-api-get-config-entries-cached';
 import { handleGroupChatApiPoll } from '@/services/handle-group-chat-api-poll';
 import { handleGroupChatApiPostAndPoll } from '@/services/handle-group-chat-api-post-and-poll';
+import { handleGroupChatApiReportAbusiveMessage } from '@/services/handle-group-chat-api-report-abusive-message';
+import { handleInventoryApiSellItems } from '@/services/handle-inventory-api-sell-items';
+import { handleMiloGuildApiCreateGuild } from '@/services/handle-milo-guild-api-create-guild';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -124,7 +127,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'MiloGuildApi.suggestGuilds2') {
 		console.log('MiloGuildApi.suggestGuilds2');
 	} else if (method === 'MiloGuildApi.createGuild') {
-		console.log('MiloGuildApi.createGuild');
+		return await handleMiloGuildApiCreateGuild(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ShopApi.purchaseProduct') {
 		console.log('ShopApi.purchaseProduct');
 	} else if (method === 'MiloSeasonApi.spendTeamRunTicket') {
@@ -198,7 +201,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'GroupChatApi.postAndPoll') {
 		return await handleGroupChatApiPostAndPoll(c, method, jsonrpc, id, params, session);
 	} else if (method === 'GroupChatApi.reportAbusiveMessage') {
-		console.log('GroupChatApi.reportAbusiveMessage');
+		return await handleGroupChatApiReportAbusiveMessage(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.upgradeBuildingMissingResources') {
 		console.log('ProductionApi.upgradeBuildingMissingResources');
 	} else if (method === 'StateApi.completeState') {
@@ -212,9 +215,9 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProductionApi.buyProducerMissingResources') {
 		console.log('ProductionApi.buyProducerMissingResources');
 	} else if (method === 'InventoryApi.sellItems') {
-		console.log('InventoryApi.sellItems');
+		return await handleInventoryApiSellItems(c, method, jsonrpc, id, params, session);
 	} else {
 		console.error('Method not implemented:', method);
-		return c.json({ error: 'Method not implemented' }, 501);
+		return { error: 'Method not implemented' };
 	}
 }
