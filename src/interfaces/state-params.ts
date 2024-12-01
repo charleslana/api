@@ -25,3 +25,12 @@ export interface StateProgressParams {
 		powerGems?: PowerGem[];
 	};
 }
+
+export interface StatePostAndPollParams {
+	id: number;
+	type: number;
+	headers: any[];
+	senderId: number;
+	timestampMs: number;
+	body: string;
+}

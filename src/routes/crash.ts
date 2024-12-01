@@ -42,6 +42,8 @@ import { handleAppStoreApiCreateJournal4 } from '@/services/handle-app-store-api
 import { handleAppTimeApiGetServerTime } from '@/services/handle-app-time-api-get-server-time';
 import { handleApplicationSettingsApiGetSettings } from '@/services/handle-application-settings-api-get-settings';
 import { handleConfigApiGetConfigEntriesCached } from '@/services/handle-config-api-get-config-entries-cached';
+import { handleGroupChatApiPoll } from '@/services/handle-group-chat-api-poll';
+import { handleGroupChatApiPostAndPoll } from '@/services/handle-group-chat-api-post-and-poll';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -192,9 +194,9 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'MiloGuildApi.leaveGuild') {
 		console.log('MiloGuildApi.leaveGuild');
 	} else if (method === 'GroupChatApi.poll') {
-		console.log('GroupChatApi.poll');
+		return await handleGroupChatApiPoll(c, method, jsonrpc, id, params, session);
 	} else if (method === 'GroupChatApi.postAndPoll') {
-		console.log('GroupChatApi.postAndPoll');
+		return await handleGroupChatApiPostAndPoll(c, method, jsonrpc, id, params, session);
 	} else if (method === 'GroupChatApi.reportAbusiveMessage') {
 		console.log('GroupChatApi.reportAbusiveMessage');
 	} else if (method === 'ProductionApi.upgradeBuildingMissingResources') {
