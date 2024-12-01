@@ -25,7 +25,12 @@ export async function handleMiloGuildApiGetGuild(c: Context<{
 		if (!user) {
 			return returnGenericError(jsonrpc, id);
 		}
-		const guildId = params[0] as number;
+		let guildId;
+		if (method === 'MiloGuildApi.getMyGuild' && user.guildId) {
+			guildId = user.guildId;
+		} else {
+			guildId = params[0] as number;
+		}
 		if (!guildId || guildId < -2147483648 || guildId > 2147483647) {
 			return returnGenericError(jsonrpc, id);
 		}

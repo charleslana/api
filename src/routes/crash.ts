@@ -52,6 +52,7 @@ import {
 	handleMiloGuildApiGetGuildJoinCooldownLeft
 } from '@/services/handle-milo-guild-api-get-guild-join-cooldown-left';
 import { handleMiloGuildApiGetGuild } from '@/services/handle-milo-guild-api-get-guild';
+import { handleMiloGuildApiGetMyGuild } from '@/services/handle-milo-guild-api-get-my-guild';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -69,7 +70,9 @@ crashRoute.post('/', zValidator('query', z.object({
 		console.log('Query session param:', _session);
 		console.info('Body:', JSON.stringify(item, null, 2));
 		console.info('end request ------------');
-		return await handleMethod(c, method, jsonrpc, id, params, _session);
+		const result = await handleMethod(c, method, jsonrpc, id, params, _session);
+		// result.method = method;
+		return result;
 	}));
 	// console.info('Body response:', JSON.stringify(results, null, 2));
 	return c.json(results);
@@ -114,7 +117,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'MiloGuildApi.getCommonGuildSettings') {
 		return await handleMiloGuildApiGetCommonGuildSettings(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.getMyGuild') {
-		console.log('MiloGuildApi.getMyGuild');
+		return await handleMiloGuildApiGetMyGuild(c, method, jsonrpc, id, params, session);
 	} else if (method === 'UnlockApi.unlockBuildings') {
 		console.log('UnlockApi.unlockBuildings');
 	} else if (method === 'StateApi.syncState') {
