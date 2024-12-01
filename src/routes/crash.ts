@@ -30,6 +30,10 @@ import {
 import {
 	handleAppEmailAndPasswordIdentityApiUpdatePassword
 } from '@/services/handle-app-email-and-password-identity-api-update-password';
+import {
+	handleAppKingAccountApiAcceptTermsOfServiceAndPrivacyPolicy
+} from '@/services/handle-app-king-account-api-accept-terms-of-service-and-privacy-policy';
+import { handleAppKingAccountApiGetCurrentAccount } from '@/services/handle-app-king-account-api-get-current-account';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -61,7 +65,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ApplicationSettingsApi.getSettings') {
 		console.log('ApplicationSettingsApi.getSettings');
 	} else if (method === 'AppKingAccountApi.getCurrentAccount') {
-		console.log('AppKingAccountApi.getCurrentAccount');
+		return await handleAppKingAccountApiGetCurrentAccount(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppApi.notifyAppStart') {
 		return await handleAppApiNotifyAppStart(c, method, jsonrpc, id, params, session);
 	} else if (method === 'OtaApi.selectPackageDescriptors') {
@@ -75,7 +79,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppAbTestApi.getAppUserAbCases') {
 		return await handleAppAbTestApiGetAppUserAbCases(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppKingAccountApi.acceptTermsOfServiceAndPrivacyPolicy') {
-		console.log('AppKingAccountApi.acceptTermsOfServiceAndPrivacyPolicy');
+		return await handleAppKingAccountApiAcceptTermsOfServiceAndPrivacyPolicy(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppCoreIdentityApi.getAuthenticationInfo') {
 		return await handleAppCoreIdentityApiGetAuthenticationInfo(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppPermissionsApi.getConsents3') {
