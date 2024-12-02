@@ -45,3 +45,9 @@ export interface StateCreateGuildParams {
 export interface StateJoinGuildParams {
 	guildId?: number;
 }
+
+export interface StateSearchGuildParams {
+	searchString?: string;
+	minimumLevel?: number;
+	filterOutOwnGuild?: boolean;
+}

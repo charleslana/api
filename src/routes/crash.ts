@@ -57,6 +57,7 @@ import { handleMiloGuildApiJoinGuild } from '@/services/handle-milo-guild-api-jo
 import { handleMiloGuildApiKickMember } from '@/services/handle-milo-guild-api-kick-member';
 import { handleMiloGuildApiLeaveGuild } from '@/services/handle-milo-guild-api-leave-guild';
 import { handleMiloGuildApiReportAbusiveContent } from '@/services/handle-milo-guild-api-report-abusive-content';
+import { handleMiloGuildApiSearchGuilds } from '@/services/handle-milo-guild-api-search-guilds';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -175,7 +176,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProductionApi.buyProducer') {
 		console.log('ProductionApi.buyProducer');
 	} else if (method === 'MiloGuildApi.searchGuilds') {
-		console.log('MiloGuildApi.searchGuilds');
+		return await handleMiloGuildApiSearchGuilds(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppStoreApi.createJournal4') {
 		return await handleAppStoreApiCreateJournal4(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.getGuild') {
