@@ -1,11 +1,11 @@
 import { GenericResponse } from '@/interfaces/generic-response';
 
-export function returnGenericResponse(jsonrpc: string, id: number) {
+export function returnGenericResponse(jsonrpc: string, id: number, resultCode = 1) {
 	const response: GenericResponse = {
 		jsonrpc,
 		id,
 		result: {
-			resultCode: 200,
+			resultCode,
 			stateUpdateOutcome: 'SUCCESS',
 			responseStatus: 'OK',
 		},

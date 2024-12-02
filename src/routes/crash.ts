@@ -56,6 +56,7 @@ import { handleMiloGuildApiGetMyGuild } from '@/services/handle-milo-guild-api-g
 import { handleMiloGuildApiJoinGuild } from '@/services/handle-milo-guild-api-join-guild';
 import { handleMiloGuildApiKickMember } from '@/services/handle-milo-guild-api-kick-member';
 import { handleMiloGuildApiLeaveGuild } from '@/services/handle-milo-guild-api-leave-guild';
+import { handleMiloGuildApiReportAbusiveContent } from '@/services/handle-milo-guild-api-report-abusive-content';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -182,7 +183,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'MiloGuildApi.joinGuild') {
 		return await handleMiloGuildApiJoinGuild(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.reportAbusiveContent') {
-		console.log('MiloGuildApi.reportAbusiveContent');
+		return await handleMiloGuildApiReportAbusiveContent(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProfileApi.getPlayerStats') {
 		console.log('ProfileApi.getPlayerStats');
 	} else if (method === 'ProfileApi.reportPlayer') {
