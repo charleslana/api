@@ -55,6 +55,7 @@ import { handleMiloGuildApiGetGuild } from '@/services/handle-milo-guild-api-get
 import { handleMiloGuildApiGetMyGuild } from '@/services/handle-milo-guild-api-get-my-guild';
 import { handleMiloGuildApiJoinGuild } from '@/services/handle-milo-guild-api-join-guild';
 import { handleMiloGuildApiKickMember } from '@/services/handle-milo-guild-api-kick-member';
+import { handleMiloGuildApiLeaveGuild } from '@/services/handle-milo-guild-api-leave-guild';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -205,7 +206,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProductionApi.startProducerMissingResources') {
 		console.log('ProductionApi.startProducerMissingResources');
 	} else if (method === 'MiloGuildApi.leaveGuild') {
-		console.log('MiloGuildApi.leaveGuild');
+		return await handleMiloGuildApiLeaveGuild(c, method, jsonrpc, id, params, session);
 	} else if (method === 'GroupChatApi.poll') {
 		return await handleGroupChatApiPoll(c, method, jsonrpc, id, params, session);
 	} else if (method === 'GroupChatApi.postAndPoll') {
