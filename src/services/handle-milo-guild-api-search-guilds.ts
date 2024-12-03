@@ -36,15 +36,58 @@ export async function handleMiloGuildApiSearchGuilds(c: Context<{
 		if (!user) {
 			return result;
 		}
-		const state = params[0] as StateSearchGuildParams;
-		if (!state || !state.searchString || !state.minimumLevel) {
-			return result;
-		}
-		// TODO get all by
 		if (method === 'MiloGuildApi.suggestGuilds2') {
-			return result;
+			const getGuilds = await db
+				.select({
+					guild: guilds,
+					members: sql`array_agg(json_build_object(
+          'id', ${guildMembers.id},
+          'userId', ${guildMembers.userId},
+          'status', ${guildMembers.status},
+					'name', ${users.name},
+					'skinId', ${users.skinId},
+          'crashPoints', ${users.crashPointsEarned},
+          'createdAt', ${guildMembers.createdAt}
+        	))`.as('members'),
+					totalCrashPoints: sql`SUM(${users.crashPointsEarned})`.as('totalCrashPoints'),
+					totalMembers: sql`COUNT(${guildMembers.id})`.as('totalMembers'),
+				})
+				.from(guilds)
+				.leftJoin(guildMembers, eq(guilds.id, guildMembers.guildId))
+				.leftJoin(users, eq(guildMembers.userId, users.id))
+				.groupBy(guilds.id)
+				.orderBy(sql`SUM(${users.crashPointsEarned}) DESC`)
+				.limit(50);
+			const guildsFound = getGuilds.map((guild) => {
+				const state = JSON.parse(JSON.stringify(searchGuildStateUtils));
+				state.guildId = guild.guild.id;
+				state.name = guild.guild.name;
+				state.description = guild.guild.description;
+				state.editableProperties[0].value = guild.guild.badgeId.toString();
+				state.computedProperties[4].value = (guild.totalCrashPoints as number).toString();
+				state.numMembers = guild.totalMembers;
+				state.members = (guild.members as GuildMember[]).map((member) => {
+					return {
+						coreUserId: member.userId,
+						status: member.status,
+						editableProperties: [],
+						computedProperties: [
+							{ name: 'guildMemberName', value: user.name },
+							{ name: 'memberActiveSkinId', value: user.skinId.toString() },
+							{ name: 'contributedCrashPoints', value: user.crashPointsEarned.toString() },
+						],
+						internalProperties: [],
+					};
+				});
+				return state;
+			});
+			result.result.guilds = guildsFound;
 		}
 		else {
+			const state = params[0] as StateSearchGuildParams;
+			if (!state || !state.searchString || !state.minimumLevel) {
+				return result;
+			}
 			const searchTerm = `%${state.searchString}%`;
 			const getGuilds = await db
 				.select({
