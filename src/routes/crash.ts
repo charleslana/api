@@ -59,6 +59,8 @@ import { handleMiloGuildApiLeaveGuild } from '@/services/handle-milo-guild-api-l
 import { handleMiloGuildApiReportAbusiveContent } from '@/services/handle-milo-guild-api-report-abusive-content';
 import { handleMiloGuildApiSearchGuilds } from '@/services/handle-milo-guild-api-search-guilds';
 import { handleMiloGuildApiSuggestGuilds2 } from '@/services/handle-milo-guild-api-suggest-guilds-2';
+import { handleMiloSeasonApiSpendTeamRunTicket } from '@/services/handle-milo-season-api-spend-team-run-ticket';
+import { handleOtaApiSelectPackageDescriptors } from '@/services/handle-ota-api-select-package-descriptors';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -97,7 +99,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppApi.notifyAppStart') {
 		return await handleAppApiNotifyAppStart(c, method, jsonrpc, id, params, session);
 	} else if (method === 'OtaApi.selectPackageDescriptors') {
-		console.log('OtaApi.selectPackageDescriptors');
+		return await handleOtaApiSelectPackageDescriptors(c, method, jsonrpc, id, params, session);
 	} else if (method === 'PushNotificationTokenApi.updatePushNotificationToken2') {
 		console.log('PushNotificationTokenApi.updatePushNotificationToken2');
 	} else if (method === 'AppCoreIdentityApi.logIn') {
@@ -145,7 +147,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ShopApi.purchaseProduct') {
 		console.log('ShopApi.purchaseProduct');
 	} else if (method === 'MiloSeasonApi.spendTeamRunTicket') {
-		console.log('MiloSeasonApi.spendTeamRunTicket');
+		return await handleMiloSeasonApiSpendTeamRunTicket(c, method, jsonrpc, id, params, session);
 	} else if (method === 'RunnerApi.endRun') {
 		console.log('RunnerApi.endRun');
 	} else if (method === 'PackApi.claimPack') {
