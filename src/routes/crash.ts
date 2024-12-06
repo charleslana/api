@@ -85,6 +85,8 @@ import { handleProgressApiStartTutorial } from '@/services/handle-progress-api-s
 import {
 	handlePushNotificationTokenApiUpdatePushNotificationToken2
 } from '@/services/handle-push-notification-token-api-update-push-notification-token-2';
+import { handleQuestApiReportQuestProgress } from '@/services/handle-quest-api-report-quest-progress';
+import { handleRunnerApiEndCollectionRun } from '@/services/handle-runner-api-end-collection-run';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -159,7 +161,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'RunnerApi.playerDeath') {
 		console.log('RunnerApi.playerDeath');
 	} else if (method === 'RunnerApi.endCollectionRun') {
-		console.log('RunnerApi.endCollectionRun');
+		return await handleRunnerApiEndCollectionRun(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ShopApi.deliverOpenTransactions') {
 		console.log('ShopApi.deliverOpenTransactions');
 	} else if (method === 'MiloGuildApi.getGuildJoinCooldownLeft') {
@@ -231,7 +233,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'UnlockApi.unlockIsland') {
 		console.log('UnlockApi.unlockIsland');
 	} else if (method === 'QuestApi.reportQuestProgress') {
-		console.log('QuestApi.reportQuestProgress');
+		return await handleQuestApiReportQuestProgress(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.startProducerMissingResources') {
 		return await handleProductionApiStartProducerMissingResources(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.leaveGuild') {
