@@ -67,6 +67,11 @@ import {
 } from '@/services/handle-production-api-buy-producer-missing-resources';
 import { handleProductionApiBuyProducer } from '@/services/handle-production-api-buy-producer';
 import { handleProductionApiCollectProducer } from '@/services/handle-production-api-collect-producer';
+import { handleProductionApiSpeedUpProducer } from '@/services/handle-production-api-speed-up-producer';
+import {
+	handleProductionApiStartProducerMissingResources
+} from '@/services/handle-production-api-start-producer-missing-resources';
+import { handleProductionApiStartProducer } from '@/services/handle-production-api-start-producer';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -163,7 +168,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppEmailAndPasswordIdentityApi.link') {
 		return await handleAppEmailAndPasswordIdentityApiLink(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.startProducer') {
-		console.log('ProductionApi.startProducer');
+		return await handleProductionApiStartProducer(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.collectProducer') {
 		return await handleProductionApiCollectProducer(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProgressApi.levelUpPlayer') {
@@ -179,7 +184,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProductionApi.upgradeBuilding') {
 		console.log('ProductionApi.upgradeBuilding');
 	} else if (method === 'ProductionApi.speedUpProducer') {
-		console.log('ProductionApi.speedUpProducer');
+		return await handleProductionApiSpeedUpProducer(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProgressApi.finishedTutorial') {
 		console.log('ProgressApi.finishedTutorial');
 	} else if (method === 'ProductionApi.buyProducer') {
@@ -215,7 +220,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'QuestApi.reportQuestProgress') {
 		console.log('QuestApi.reportQuestProgress');
 	} else if (method === 'ProductionApi.startProducerMissingResources') {
-		console.log('ProductionApi.startProducerMissingResources');
+		return await handleProductionApiStartProducerMissingResources(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.leaveGuild') {
 		return await handleMiloGuildApiLeaveGuild(c, method, jsonrpc, id, params, session);
 	} else if (method === 'GroupChatApi.poll') {

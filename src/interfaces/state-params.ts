@@ -1,4 +1,4 @@
-import { Building, Inventory, Pack, PowerGem, Producer, ProducerState } from '@/db/model';
+import { Building, Inventory, Pack, PowerGem, Producer, ProducerState, ProducerStateWithItems } from '@/db/model';
 
 export interface StateInventoryParams {
 	inventoryDiff?: {
@@ -67,5 +67,11 @@ export interface StateProducerParams {
 export interface StateProducerStateParams {
 	progressDiff?: {
 		producerStates?: ProducerState[];
+	};
+}
+
+export interface StateGameDiffProducerStateParams {
+	gameStateDiff?: {
+		producerStates?: ProducerStateWithItems[];
 	};
 }

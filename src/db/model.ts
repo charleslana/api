@@ -46,3 +46,7 @@ export type Relic = InferSelectModel<typeof relics>;
 export type ShopRotation = InferSelectModel<typeof shopRotations>;
 export type Skin = InferSelectModel<typeof skins>;
 export type Tutorial = InferSelectModel<typeof tutorials>;
+
+export type ProducerStateWithItems = ProducerState & {
+	producingItems: ProducingItem[];
+};
