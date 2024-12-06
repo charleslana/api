@@ -61,6 +61,7 @@ import { handleMiloGuildApiSearchGuilds } from '@/services/handle-milo-guild-api
 import { handleMiloGuildApiSuggestGuilds2 } from '@/services/handle-milo-guild-api-suggest-guilds-2';
 import { handleMiloSeasonApiSpendTeamRunTicket } from '@/services/handle-milo-season-api-spend-team-run-ticket';
 import { handleOtaApiSelectPackageDescriptors } from '@/services/handle-ota-api-select-package-descriptors';
+import { handlePackApiClaimPack } from '@/services/handle-pack-api-claim-pack';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -151,7 +152,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'RunnerApi.endRun') {
 		console.log('RunnerApi.endRun');
 	} else if (method === 'PackApi.claimPack') {
-		console.log('PackApi.claimPack');
+		return await handlePackApiClaimPack(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.authenticate') {
 		return await handleAppDatabaseApiGetAppDatabase(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.link') {

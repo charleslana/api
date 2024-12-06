@@ -1,4 +1,4 @@
-import { Building, Inventory, PowerGem } from '@/db/model';
+import { Building, Inventory, Pack, PowerGem } from '@/db/model';
 
 export interface StateInventoryParams {
 	inventoryDiff?: {
@@ -50,4 +50,10 @@ export interface StateSearchGuildParams {
 	searchString?: string;
 	minimumLevel?: number;
 	filterOutOwnGuild?: boolean;
+}
+
+export interface StatePackParams {
+	progressDiff?: {
+		packProgress?: Pack[];
+	};
 }

@@ -20,13 +20,14 @@ export async function updateInventory(c: Context<{
 		}
 		const state = params[0] as StateInventoryParams;
 		if (!state.inventoryDiff || !state.inventoryDiff.items || !state.inventoryDiff.items.length) {
-			return;
+			return user;
 		}
 		const promises = state.inventoryDiff.items.map(async (item) => {
 			return await applyUpdateInventory(c, user, item);
 		});
 		const results = await Promise.all(promises);
-		return results.flat();
+		// return results.flat();
+		return user;
 	} catch (error) {
 		console.error('Erro ao processar informação:', error);
 		throw error;
