@@ -1,19 +1,23 @@
 import { Context } from 'hono';
 import { buildings } from '@/db/schema';
-import { getUserSession } from '@/services/get-user-session';
+// import { getUserSession } from '@/services/get-user-session';
 import type { Env, Variables } from '@/lib/types';
 import { and, eq } from 'drizzle-orm';
 import { StateBuildingParams } from '@/interfaces/state-params';
+import { User } from '@/db/model';
 
 export async function updateBuilding(c: Context<{
 	Bindings: Env, Variables: Variables
-}>, params: any[], session?: string) {
+}>, params: any[], session?: string, user?: User) {
 	const db = c.get('db');
 	try {
-		const user = await getUserSession(c, session);
 		if (!user) {
 			return;
 		}
+		// const user = await getUserSession(c, session);
+		// if (!user) {
+		// 	return;
+		// }
 		if (params.length === 0) {
 			return;
 		}

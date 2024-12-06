@@ -72,6 +72,9 @@ import {
 	handleProductionApiStartProducerMissingResources
 } from '@/services/handle-production-api-start-producer-missing-resources';
 import { handleProductionApiStartProducer } from '@/services/handle-production-api-start-producer';
+import {
+	handleProductionApiUpgradeBuildingMissingResources
+} from '@/services/handle-production-api-upgrade-building-missing-resources';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -230,7 +233,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'GroupChatApi.reportAbusiveMessage') {
 		return await handleGroupChatApiReportAbusiveMessage(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.upgradeBuildingMissingResources') {
-		console.log('ProductionApi.upgradeBuildingMissingResources');
+		return await handleProductionApiUpgradeBuildingMissingResources(c, method, jsonrpc, id, params, session);
 	} else if (method === 'StateApi.completeState') {
 		console.log('StateApi.completeState');
 	} else if (method === 'AppKingAccountApi.updateCurrentAccount') {
