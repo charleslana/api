@@ -4,7 +4,7 @@ import { getUserSession } from '@/services/get-user-session';
 import { returnGenericError } from '@/shared/return-generic-error';
 import { guildMembers, users } from '@/db/schema';
 import { and, eq } from 'drizzle-orm';
-import { returnGenericResponse } from '@/shared/return-generic-response';
+import { returnGenericSuccess } from '@/shared/return-generic-success';
 
 export async function handleMiloGuildApiKickMember(c: Context<{
 	Bindings: Env, Variables: Variables
@@ -38,7 +38,7 @@ export async function handleMiloGuildApiKickMember(c: Context<{
 				.set({guildId: null})
 				.where(eq(users.id, userId)),
 		]);
-		return returnGenericResponse(jsonrpc, id);
+		return returnGenericSuccess(jsonrpc, id);
 	} catch (error) {
 		console.error(`Erro no método ${method}: ${error}`);
 		return returnGenericError(jsonrpc, id);

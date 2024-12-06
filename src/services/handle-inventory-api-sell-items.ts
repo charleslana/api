@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import type { Env, Variables } from '@/lib/types';
 import { updateInventory } from '@/services/update-inventory';
-import { returnGenericResponse } from '@/shared/return-generic-response';
+import { returnGenericSuccess } from '@/shared/return-generic-success';
 import { returnGenericError } from '@/shared/return-generic-error';
 
 export async function handleInventoryApiSellItems(c: Context<{
@@ -10,7 +10,7 @@ export async function handleInventoryApiSellItems(c: Context<{
 	const db = c.get('db');
 	try {
 		await updateInventory(c, params, session);
-		return returnGenericResponse(jsonrpc, id);
+		return returnGenericSuccess(jsonrpc, id);
 	} catch (error) {
 		console.error(`Erro no método ${method}: ${error}`);
 		return returnGenericError(jsonrpc, id);

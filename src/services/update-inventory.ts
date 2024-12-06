@@ -16,7 +16,7 @@ export async function updateInventory(c: Context<{
 			return;
 		}
 		if (params.length === 0) {
-			return;
+			return user;
 		}
 		const state = params[0] as StateInventoryParams;
 		if (!state.inventoryDiff || !state.inventoryDiff.items || !state.inventoryDiff.items.length) {

@@ -1,4 +1,4 @@
-import { Building, Inventory, Pack, PowerGem } from '@/db/model';
+import { Building, Inventory, Pack, PowerGem, Producer } from '@/db/model';
 
 export interface StateInventoryParams {
 	inventoryDiff?: {
@@ -55,5 +55,11 @@ export interface StateSearchGuildParams {
 export interface StatePackParams {
 	progressDiff?: {
 		packProgress?: Pack[];
+	};
+}
+
+export interface StateProducerParams {
+	progressDiff?: {
+		producerProgress?: Producer[];
 	};
 }

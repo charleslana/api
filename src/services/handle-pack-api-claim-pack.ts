@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 import type { Env, Variables } from '@/lib/types';
 import { updateInventory } from '@/services/update-inventory';
-import { returnGenericResponse } from '@/shared/return-generic-response';
+import { returnGenericSuccess } from '@/shared/return-generic-success';
 import { returnGenericError } from '@/shared/return-generic-error';
 import { StatePackParams } from '@/interfaces/state-params';
 import { Pack, User } from '@/db/model';
@@ -27,7 +27,7 @@ export async function handlePackApiClaimPack(c: Context<{
 			}
 		});
 		await Promise.all(promises);
-		return returnGenericResponse(jsonrpc, id);
+		return returnGenericSuccess(jsonrpc, id);
 	} catch (error) {
 		console.error(`Erro no método ${method}: ${error}`);
 		return returnGenericError(jsonrpc, id);

@@ -2,7 +2,7 @@ import { Context } from 'hono';
 import type { Env, Variables } from '@/lib/types';
 import { getUserSession } from '@/services/get-user-session';
 import { returnGenericError } from '@/shared/return-generic-error';
-import { returnGenericResponse } from '@/shared/return-generic-response';
+import { returnGenericSuccess } from '@/shared/return-generic-success';
 import { guildMembers, guilds, users } from '@/db/schema';
 import { and, asc, eq, ne } from 'drizzle-orm';
 
@@ -55,7 +55,7 @@ export async function handleMiloGuildApiLeaveGuild(c: Context<{
 				db.update(users).set({guildId: null}).where(eq(users.id, user.id)),
 			]);
 		}
-		return returnGenericResponse(jsonrpc, id);
+		return returnGenericSuccess(jsonrpc, id);
 	} catch (error) {
 		console.error(`Erro no método ${method}: ${error}`);
 		return returnGenericError(jsonrpc, id);

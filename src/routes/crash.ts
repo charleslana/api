@@ -62,6 +62,10 @@ import { handleMiloGuildApiSuggestGuilds2 } from '@/services/handle-milo-guild-a
 import { handleMiloSeasonApiSpendTeamRunTicket } from '@/services/handle-milo-season-api-spend-team-run-ticket';
 import { handleOtaApiSelectPackageDescriptors } from '@/services/handle-ota-api-select-package-descriptors';
 import { handlePackApiClaimPack } from '@/services/handle-pack-api-claim-pack';
+import {
+	handleProductionApiBuyProducerMissingResources
+} from '@/services/handle-production-api-buy-producer-missing-resources';
+import { handleProductionApiBuyProducer } from '@/services/handle-production-api-buy-producer';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -178,7 +182,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProgressApi.finishedTutorial') {
 		console.log('ProgressApi.finishedTutorial');
 	} else if (method === 'ProductionApi.buyProducer') {
-		console.log('ProductionApi.buyProducer');
+		return await handleProductionApiBuyProducer(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.searchGuilds') {
 		return await handleMiloGuildApiSearchGuilds(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppStoreApi.createJournal4') {
@@ -230,7 +234,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppEmailAndPasswordIdentityApi.updatePassword') {
 		return await handleAppEmailAndPasswordIdentityApiUpdatePassword(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.buyProducerMissingResources') {
-		console.log('ProductionApi.buyProducerMissingResources');
+		return await handleProductionApiBuyProducerMissingResources(c, method, jsonrpc, id, params, session);
 	} else if (method === 'InventoryApi.sellItems') {
 		return await handleInventoryApiSellItems(c, method, jsonrpc, id, params, session);
 	} else {

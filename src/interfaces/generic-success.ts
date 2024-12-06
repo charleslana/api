@@ -1,4 +1,4 @@
-export interface GenericResponse {
+export interface GenericSuccess {
 	jsonrpc: string;
 	id: number;
 	result: {
