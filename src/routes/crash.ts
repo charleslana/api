@@ -66,6 +66,7 @@ import {
 	handleProductionApiBuyProducerMissingResources
 } from '@/services/handle-production-api-buy-producer-missing-resources';
 import { handleProductionApiBuyProducer } from '@/services/handle-production-api-buy-producer';
+import { handleProductionApiCollectProducer } from '@/services/handle-production-api-collect-producer';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -164,7 +165,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProductionApi.startProducer') {
 		console.log('ProductionApi.startProducer');
 	} else if (method === 'ProductionApi.collectProducer') {
-		console.log('ProductionApi.collectProducer');
+		return await handleProductionApiCollectProducer(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProgressApi.levelUpPlayer') {
 		console.log('ProgressApi.levelUpPlayer');
 	} else if (method === 'ProfileApi.setPlayerActiveSkin') {

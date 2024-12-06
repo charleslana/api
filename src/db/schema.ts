@@ -167,11 +167,13 @@ export const producerStates = pgTable('producerStates', {
 	state: text('state').notNull(),
 	produceTimeSeconds: integer('produceTimeSeconds').notNull(),
 	clientTimeStarted: integer('clientTimeStarted').notNull(),
-	producingItemId: integer('landId').notNull().references(() => producingItems.id, { onDelete: 'cascade' })
 });
 
 export const producingItems = pgTable('producingItems', {
-	id: serial('id').primaryKey(), itemTypeId: integer('itemTypeId').notNull(), count: integer('count').notNull()
+	id: serial('id').primaryKey(),
+	itemTypeId: integer('itemTypeId').notNull(),
+	count: integer('count').notNull(),
+	producerStateId: integer('producerStateId').notNull().references(() => producerStates.id, { onDelete: 'cascade' })
 });
 
 export const producers = pgTable('producers', {
