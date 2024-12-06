@@ -81,6 +81,10 @@ import { handleProfileApiReportPlayer } from '@/services/handle-profile-api-repo
 import { handleProfileApiSetPlayerActiveSkin } from '@/services/handle-profile-api-set-player-active-skin';
 import { handleProgressApiFinishedTutorial } from '@/services/handle-progress-api-finished-tutorial';
 import { handleProgressApiLevelUpPlayer } from '@/services/handle-progress-api-level-up-player';
+import { handleProgressApiStartTutorial } from '@/services/handle-progress-api-start-tutorial';
+import {
+	handlePushNotificationTokenApiUpdatePushNotificationToken2
+} from '@/services/handle-push-notification-token-api-update-push-notification-token-2';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -121,7 +125,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'OtaApi.selectPackageDescriptors') {
 		return await handleOtaApiSelectPackageDescriptors(c, method, jsonrpc, id, params, session);
 	} else if (method === 'PushNotificationTokenApi.updatePushNotificationToken2') {
-		console.log('PushNotificationTokenApi.updatePushNotificationToken2');
+		return await handlePushNotificationTokenApiUpdatePushNotificationToken2(c, method, jsonrpc, id, params);
 	} else if (method === 'AppCoreIdentityApi.logIn') {
 		return await handleAppCoreIdentityApiLogIn(c, method, jsonrpc, id, params);
 	} else if (method === 'ServerAuthLiveOpsApi.getLiveOps') {
@@ -189,7 +193,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'UnlockApi.unlockItems') {
 		console.log('UnlockApi.unlockItems');
 	} else if (method === 'ProgressApi.startTutorial') {
-		console.log('ProgressApi.startTutorial');
+		return await handleProgressApiStartTutorial(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.upgradeBuilding') {
 		return await handleProductionApiUpgradeBuilding(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.speedUpProducer') {
