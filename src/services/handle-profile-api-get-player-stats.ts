@@ -1,6 +1,6 @@
 import { Context } from 'hono';
 import type { Env, Variables } from '@/lib/types';
-import { skins, users } from '@/db/schema';
+import { powerGems, skins, users } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { User } from '@/db/model';
 import { returnGenericError } from '@/shared/return-generic-error';
@@ -20,8 +20,8 @@ export async function handleProfileApiGetPlayerStats(c: Context<{
 				totalSkins: sql<number>`COUNT(${skins.id})`,
 				totalPowerGems: sql<number>`
 					(SELECT COALESCE(SUM("numPowerGems"), 0)
-					 FROM "powerGems"
-					 WHERE "powerGems"."userId" = ${users.id}
+					 FROM ${powerGems}
+					 WHERE ${powerGems}."userId" = ${users.id}
 					)
 				`,
 			})
