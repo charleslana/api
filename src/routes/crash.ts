@@ -77,6 +77,10 @@ import {
 } from '@/services/handle-production-api-upgrade-building-missing-resources';
 import { handleProductionApiUpgradeBuilding } from '@/services/handle-production-api-upgrade-building';
 import { handleProfileApiGetPlayerStats } from '@/services/handle-profile-api-get-player-stats';
+import { handleProfileApiReportPlayer } from '@/services/handle-profile-api-report-player';
+import { handleProfileApiSetPlayerActiveSkin } from '@/services/handle-profile-api-set-player-active-skin';
+import { handleProgressApiFinishedTutorial } from '@/services/handle-progress-api-finished-tutorial';
+import { handleProgressApiLevelUpPlayer } from '@/services/handle-progress-api-level-up-player';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -177,9 +181,9 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProductionApi.collectProducer') {
 		return await handleProductionApiCollectProducer(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProgressApi.levelUpPlayer') {
-		console.log('ProgressApi.levelUpPlayer');
+		return await handleProgressApiLevelUpPlayer(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProfileApi.setPlayerActiveSkin') {
-		console.log('ProfileApi.setPlayerActiveSkin');
+		return await handleProfileApiSetPlayerActiveSkin(c, method, jsonrpc, id, params, session);
 	} else if (method === 'UnlockApi.unlockLand') {
 		console.log('UnlockApi.unlockLand');
 	} else if (method === 'UnlockApi.unlockItems') {
@@ -191,7 +195,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProductionApi.speedUpProducer') {
 		return await handleProductionApiSpeedUpProducer(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProgressApi.finishedTutorial') {
-		console.log('ProgressApi.finishedTutorial');
+		return await handleProgressApiFinishedTutorial(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.buyProducer') {
 		return await handleProductionApiBuyProducer(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.searchGuilds') {
@@ -207,7 +211,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProfileApi.getPlayerStats') {
 		return await handleProfileApiGetPlayerStats(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProfileApi.reportPlayer') {
-		console.log('ProfileApi.reportPlayer');
+		return await handleProfileApiReportPlayer(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.kickMember') {
 		return await handleMiloGuildApiKickMember(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.checkPassword') {

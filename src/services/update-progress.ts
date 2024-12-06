@@ -4,28 +4,38 @@ import { getUserSession } from '@/services/get-user-session';
 import type { Env, Variables } from '@/lib/types';
 import { and, eq } from 'drizzle-orm';
 import { StateProgressParams } from '@/interfaces/state-params';
-import { PowerGem } from '@/db/model';
+import { PowerGem, User } from '@/db/model';
 
 export async function updateProgress(c: Context<{
 	Bindings: Env, Variables: Variables
-}>, params: any[], session?: string) {
+}>, params: any[], session?: string, user?: User) {
 	const db = c.get('db');
 	try {
-		const user = await getUserSession(c, session);
 		if (!user) {
 			return;
 		}
+		// const user = await getUserSession(c, session);
+		// if (!user) {
+		// 	return;
+		// }
 		if (params.length === 0) {
 			return;
 		}
 		const state = params[0] as StateProgressParams;
-		if (!state.progressDiff || !state.progressDiff.xp || !state.progressDiff.level || !state.progressDiff.crashPointsEarned) {
+		if (!state.progressDiff || state.progressDiff.xp === undefined || state.progressDiff.level === undefined || state.progressDiff.crashPointsEarned === undefined) {
 			return;
 		}
-		await db
-			.update(users)
-			.set({ xp: state.progressDiff.xp, level: state.progressDiff.level, crashPointsEarned: state.progressDiff.crashPointsEarned, skinId: state.skinId })
-			.where(eq(users.id, user.id));
+		if (Number.isInteger(state.progressDiff.xp) && Number.isInteger(state.progressDiff.level) && Number.isInteger(state.progressDiff.crashPointsEarned)) {
+			await db
+				.update(users)
+				.set({
+					xp: user.xp + state.progressDiff.xp,
+					level: user.level + state.progressDiff.level,
+					crashPointsEarned: user.crashPointsEarned + state.progressDiff.crashPointsEarned,
+					skinId: state.skinId
+				})
+				.where(eq(users.id, user.id));
+		}
 		let promises: Promise<PowerGem[] | undefined>[] = [];
 		if (state.progressDiff.powerGems && state.progressDiff.powerGems.length) {
 			promises = state.progressDiff.powerGems.map(async (item) => {
