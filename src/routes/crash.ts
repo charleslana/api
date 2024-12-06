@@ -87,6 +87,7 @@ import {
 } from '@/services/handle-push-notification-token-api-update-push-notification-token-2';
 import { handleQuestApiReportQuestProgress } from '@/services/handle-quest-api-report-quest-progress';
 import { handleRunnerApiEndCollectionRun } from '@/services/handle-runner-api-end-collection-run';
+import { handleRunnerApiEndRun } from '@/services/handle-runner-api-end-run';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -175,7 +176,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'MiloSeasonApi.spendTeamRunTicket') {
 		return await handleMiloSeasonApiSpendTeamRunTicket(c, method, jsonrpc, id, params, session);
 	} else if (method === 'RunnerApi.endRun') {
-		console.log('RunnerApi.endRun');
+		return await handleRunnerApiEndRun(c, method, jsonrpc, id, params, session);
 	} else if (method === 'PackApi.claimPack') {
 		return await handlePackApiClaimPack(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.authenticate') {

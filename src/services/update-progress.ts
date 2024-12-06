@@ -1,6 +1,5 @@
 import { Context } from 'hono';
 import { powerGems, users } from '@/db/schema';
-import { getUserSession } from '@/services/get-user-session';
 import type { Env, Variables } from '@/lib/types';
 import { and, eq } from 'drizzle-orm';
 import { StateProgressParams } from '@/interfaces/state-params';

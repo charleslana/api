@@ -1,11 +1,11 @@
 import {
-	Building,
+	Building, ColoredGem, Cooldown,
 	Inventory,
 	Pack,
 	PowerGem,
 	Producer,
 	ProducerState,
-	ProducerStateWithItems,
+	ProducerStateWithItems, Relic,
 	Tutorial
 } from '@/db/model';
 
@@ -88,5 +88,32 @@ export interface StateGameDiffProducerStateParams {
 export interface StateTutorialParams {
 	progressDiff?: {
 		tutorialProgress?: Tutorial[];
+	};
+	runDefinitionId?: string;
+}
+
+export interface StateGangParams {
+	progressDiff?: {
+		currentGangProgress?: {
+			defeatedBossIds?: number[];
+		};
+	};
+}
+
+export interface StateColoredGemParams {
+	progressDiff?: {
+		coloredGems?: ColoredGem[];
+	};
+}
+
+export interface StateCooldownParams {
+	gameStateDiff?: {
+		cooldowns?: Cooldown[];
+	};
+}
+
+export interface StateRelicParams {
+	progressDiff?: {
+		relicProgress?: Relic[];
 	};
 }

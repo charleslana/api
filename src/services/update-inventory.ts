@@ -1,9 +1,9 @@
 import { Context } from 'hono';
-import { inventories } from '@/db/schema';
+import { inventories, tutorials } from '@/db/schema';
 import { getUserSession } from '@/services/get-user-session';
 import type { Env, Variables } from '@/lib/types';
-import { and, eq } from 'drizzle-orm';
-import { StateInventoryParams } from '@/interfaces/state-params';
+import { and, count, eq } from 'drizzle-orm';
+import { StateInventoryParams, StateTutorialParams } from '@/interfaces/state-params';
 import { Inventory, User } from '@/db/model';
 
 export async function updateInventory(c: Context<{
@@ -13,6 +13,10 @@ export async function updateInventory(c: Context<{
 	try {
 		const user = await getUserSession(c, session);
 		if (!user) {
+			return;
+		}
+		const exists = await verifyTutorial(c, params, user);
+		if (exists) {
 			return;
 		}
 		if (params.length === 0) {
@@ -63,4 +67,19 @@ export async function applyUpdateInventory(c: Context<{
 				.where(and(eq(inventories.userId, user.id), eq(inventories.itemTypeId, item.itemTypeId)));
 		}
 	}
+}
+
+async function verifyTutorial(c: Context<{
+	Bindings: Env, Variables: Variables
+}>, params: any[], user: User) {
+	const state = params[0] as StateTutorialParams;
+	if (!state || !state.runDefinitionId) {
+		return false;
+	}
+	const db = c.get('db');
+	if (state.runDefinitionId === 'WumTurTutorial1') {
+		const [countTutorial] = await db.select({ count: count() }).from(tutorials).where(eq(tutorials.userId, user.id));
+		return countTutorial.count > 0;
+	}
+	return false;
 }
