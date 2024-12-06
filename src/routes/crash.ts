@@ -75,6 +75,8 @@ import { handleProductionApiStartProducer } from '@/services/handle-production-a
 import {
 	handleProductionApiUpgradeBuildingMissingResources
 } from '@/services/handle-production-api-upgrade-building-missing-resources';
+import { handleProductionApiUpgradeBuilding } from '@/services/handle-production-api-upgrade-building';
+import { handleProfileApiGetPlayerStats } from '@/services/handle-profile-api-get-player-stats';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -185,7 +187,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProgressApi.startTutorial') {
 		console.log('ProgressApi.startTutorial');
 	} else if (method === 'ProductionApi.upgradeBuilding') {
-		console.log('ProductionApi.upgradeBuilding');
+		return await handleProductionApiUpgradeBuilding(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.speedUpProducer') {
 		return await handleProductionApiSpeedUpProducer(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProgressApi.finishedTutorial') {
@@ -203,7 +205,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'MiloGuildApi.reportAbusiveContent') {
 		return await handleMiloGuildApiReportAbusiveContent(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProfileApi.getPlayerStats') {
-		console.log('ProfileApi.getPlayerStats');
+		return await handleProfileApiGetPlayerStats(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProfileApi.reportPlayer') {
 		console.log('ProfileApi.reportPlayer');
 	} else if (method === 'MiloGuildApi.kickMember') {
