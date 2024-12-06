@@ -88,6 +88,9 @@ import {
 import { handleQuestApiReportQuestProgress } from '@/services/handle-quest-api-report-quest-progress';
 import { handleRunnerApiEndCollectionRun } from '@/services/handle-runner-api-end-collection-run';
 import { handleRunnerApiEndRun } from '@/services/handle-runner-api-end-run';
+import { handleRunnerApiPlayerDeath } from '@/services/handle-runner-api-player-death';
+import { handleServerAuthLiveOpsApiGetLiveOps } from '@/services/handle-server-auth-live-ops-api-get-live-ops';
+import { handleShopApiDeliverOpenTransactions } from '@/services/handle-shop-api-deliver-open-transactions';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -132,7 +135,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AppCoreIdentityApi.logIn') {
 		return await handleAppCoreIdentityApiLogIn(c, method, jsonrpc, id, params);
 	} else if (method === 'ServerAuthLiveOpsApi.getLiveOps') {
-		console.log('ServerAuthLiveOpsApi.getLiveOps');
+		return await handleServerAuthLiveOpsApiGetLiveOps(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppAbTestApi.getAppUserAbCases') {
 		return await handleAppAbTestApiGetAppUserAbCases(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppKingAccountApi.acceptTermsOfServiceAndPrivacyPolicy') {
@@ -160,11 +163,11 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ShopApi.loadProducts') {
 		console.log('ShopApi.loadProducts');
 	} else if (method === 'RunnerApi.playerDeath') {
-		console.log('RunnerApi.playerDeath');
+		return await handleRunnerApiPlayerDeath(c, method, jsonrpc, id, params, session);
 	} else if (method === 'RunnerApi.endCollectionRun') {
 		return await handleRunnerApiEndCollectionRun(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ShopApi.deliverOpenTransactions') {
-		console.log('ShopApi.deliverOpenTransactions');
+		return await handleShopApiDeliverOpenTransactions(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.getGuildJoinCooldownLeft') {
 		return await handleMiloGuildApiGetGuildJoinCooldownLeft(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloGuildApi.suggestGuilds2') {
