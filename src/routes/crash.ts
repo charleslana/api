@@ -92,6 +92,7 @@ import { handleRunnerApiPlayerDeath } from '@/services/handle-runner-api-player-
 import { handleServerAuthLiveOpsApiGetLiveOps } from '@/services/handle-server-auth-live-ops-api-get-live-ops';
 import { handleShopApiDeliverOpenTransactions } from '@/services/handle-shop-api-deliver-open-transactions';
 import { handleShopApiLoadProducts } from '@/services/handle-shop-api-load-products';
+import { handleShopApiPurchaseProduct } from '@/services/handle-shop-api-purchase-product';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -176,7 +177,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'MiloGuildApi.createGuild') {
 		return await handleMiloGuildApiCreateGuild(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ShopApi.purchaseProduct') {
-		console.log('ShopApi.purchaseProduct');
+		return await handleShopApiPurchaseProduct(c, method, jsonrpc, id, params, session);
 	} else if (method === 'MiloSeasonApi.spendTeamRunTicket') {
 		return await handleMiloSeasonApiSpendTeamRunTicket(c, method, jsonrpc, id, params, session);
 	} else if (method === 'RunnerApi.endRun') {

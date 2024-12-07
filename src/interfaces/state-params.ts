@@ -117,3 +117,15 @@ export interface StateRelicParams {
 		relicProgress?: Relic[];
 	};
 }
+
+export interface StatePurchaseProductParams {
+	placementId?: string;
+	progressDiff?: {
+		characterProgress?: [
+			{
+				characterId?: number;
+				skinIds?: number[];
+			}
+		]
+	}
+}
