@@ -91,6 +91,7 @@ import { handleRunnerApiEndRun } from '@/services/handle-runner-api-end-run';
 import { handleRunnerApiPlayerDeath } from '@/services/handle-runner-api-player-death';
 import { handleServerAuthLiveOpsApiGetLiveOps } from '@/services/handle-server-auth-live-ops-api-get-live-ops';
 import { handleShopApiDeliverOpenTransactions } from '@/services/handle-shop-api-deliver-open-transactions';
+import { handleShopApiLoadProducts } from '@/services/handle-shop-api-load-products';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -161,7 +162,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'StateApi.syncState') {
 		console.log('StateApi.syncState');
 	} else if (method === 'ShopApi.loadProducts') {
-		console.log('ShopApi.loadProducts');
+		return await handleShopApiLoadProducts(c, method, jsonrpc, id, params, session);
 	} else if (method === 'RunnerApi.playerDeath') {
 		return await handleRunnerApiPlayerDeath(c, method, jsonrpc, id, params, session);
 	} else if (method === 'RunnerApi.endCollectionRun') {
