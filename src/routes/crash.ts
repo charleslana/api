@@ -96,6 +96,7 @@ import { handleShopApiPurchaseProduct } from '@/services/handle-shop-api-purchas
 import { handleUnlockApiUnlockBuildings } from '@/services/handle-unlock-api-unlock-buildings';
 import { handleUnlockApiUnlockLand } from '@/services/handle-unlock-api-unlock-land';
 import { handleUnlockApiUnlockIsland } from '@/services/handle-unlock-api-unlock-island';
+import { handleUnlockApiUnlockItems } from '@/services/handle-unlock-api-unlock-items';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -202,7 +203,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'UnlockApi.unlockLand') {
 		return await handleUnlockApiUnlockLand(c, method, jsonrpc, id, params, session);
 	} else if (method === 'UnlockApi.unlockItems') {
-		console.log('UnlockApi.unlockItems');
+		return await handleUnlockApiUnlockItems(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProgressApi.startTutorial') {
 		return await handleProgressApiStartTutorial(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.upgradeBuilding') {
