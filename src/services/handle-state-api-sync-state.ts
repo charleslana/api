@@ -4,6 +4,19 @@ import { returnGenericError } from '@/shared/return-generic-error';
 import { getUserSession } from '@/services/get-user-session';
 import { StateInterface } from '@/interfaces/state-interface';
 import { initEmptyStateUtils } from '@/utils/init-empty-state-utils';
+import {
+	buildings, buildingUnlocks, coloredGems, cooldowns,
+	gangs,
+	inventories, islandUnlocks,
+	itemUnlocks,
+	packs,
+	powerGems, producers,
+	producerStates, producingItems, relics,
+	skins,
+	tutorials
+} from '@/db/schema';
+import { eq, sql } from 'drizzle-orm';
+import { ProducingItem, User } from '@/db/model';
 
 export async function handleStateApiSyncState(c: Context<{
 	Bindings: Env, Variables: Variables
@@ -18,7 +31,7 @@ export async function handleStateApiSyncState(c: Context<{
 		if (!user) {
 			setLoggedOutState(state);
 		} else {
-			setLoggedInState();
+			await setLoggedInState(c, user, state);
 		}
 		const result = {
 			jsonrpc,
@@ -55,7 +68,7 @@ function setLoggedOutState(state: StateInterface) {
 	initEmptyStateUtils.progressDiff.producerProgress = state.progressDiff?.producerProgress ?? [];
 	initEmptyStateUtils.progressDiff.seasonProgress = state.progressDiff?.seasonProgress ?? [];
 	initEmptyStateUtils.progressDiff.questProgress = state.progressDiff?.questProgress ?? [];
-	initEmptyStateUtils.progressDiff.currentGangProgress.defeatedBossIds = state.progressDiff?.currentGangProgress.defeatedBossIds ?? [];
+	initEmptyStateUtils.progressDiff.currentGangProgress = state.progressDiff?.currentGangProgress ?? {defeatedBossIds: []};
 
 	initEmptyStateUtils.inventoryDiff.items = state.inventoryDiff?.items ?? [];
 	initEmptyStateUtils.gameStateDiff.producerStates = state.gameStateDiff?.producerStates ?? [];
@@ -64,4 +77,98 @@ function setLoggedOutState(state: StateInterface) {
 	initEmptyStateUtils.gameStateDiff.unclaimedSeasonPassScore = state.gameStateDiff?.unclaimedSeasonPassScore ?? [];
 }
 
-function setLoggedInState() {}
+async function setLoggedInState(c: Context<{ Bindings: Env, Variables: Variables }>, user: User, state: StateInterface) {
+	const db = c.get('db');
+	const [
+		getInventories,
+		getPacks,
+		getSkins,
+		getTutorials,
+		getPowerGems,
+		getGangs,
+		getItemUnlocks,
+		getProducerStatesWithItems,
+		getBuildings,
+		getBuildingUnlocks,
+		getIslandUnlocks,
+		getColoredGems,
+		getRelics,
+		getProducers,
+		getCooldowns,
+	] = await Promise.all([
+		db.select().from(inventories).where(eq(inventories.userId, user.id)),
+		db.select().from(packs).where(eq(packs.userId, user.id)),
+		db.select().from(skins).where(eq(skins.userId, user.id)),
+		db.select().from(tutorials).where(eq(tutorials.userId, user.id)),
+		db.select().from(powerGems).where(eq(powerGems.userId, user.id)),
+		db.select().from(gangs).where(eq(gangs.userId, user.id)),
+		db.select().from(itemUnlocks).where(eq(itemUnlocks.userId, user.id)),
+		db.select({
+				producerStates: producerStates,
+				producingItems: sql<ProducingItem[]>`array_agg(json_build_object(
+					'id', ${producingItems.id},
+					'itemTypeId', ${producingItems.itemTypeId},
+					'count', ${producingItems.count}
+		))`.as('producingItems'),
+		}).from(producerStates)
+			.leftJoin(producingItems, eq(producerStates.id, producingItems.producerStateId))
+			.where(eq(producerStates.userId, user.id))
+			.groupBy(producerStates.id),
+	db.select().from(buildings).where(eq(buildings.userId, user.id)),
+		db.select().from(buildingUnlocks).where(eq(buildingUnlocks.userId, user.id)),
+		db.select().from(islandUnlocks).where(eq(islandUnlocks.userId, user.id)),
+		db.select().from(coloredGems).where(eq(coloredGems.userId, user.id)),
+		db.select().from(relics).where(eq(relics.userId, user.id)),
+		db.select().from(producers).where(eq(producers.userId, user.id)),
+		db.select().from(cooldowns).where(eq(cooldowns.userId, user.id)),
+	]);
+
+	const groupedSkins = getSkins.reduce(
+		(acc: { characterId: number; skinIds: number[] }[], skin) => {
+			const characterProgress = acc.find(item => item.characterId === skin.characterId);
+			if (characterProgress) {
+				characterProgress.skinIds.push(skin.skinId);
+			} else {
+				acc.push({
+					characterId: skin.characterId,
+					skinIds: [skin.skinId],
+				});
+			}
+			return acc;
+		},
+		[]
+	);
+
+	initEmptyStateUtils.progressDiff.xp = user.xp;
+	initEmptyStateUtils.progressDiff.level = user.level;
+	initEmptyStateUtils.progressDiff.crashPointsEarned = user.crashPointsEarned;
+	initEmptyStateUtils.progressDiff.packProgress = getPacks;
+	initEmptyStateUtils.progressDiff.characterProgress = groupedSkins;
+	initEmptyStateUtils.progressDiff.tutorialProgress = getTutorials;
+	initEmptyStateUtils.progressDiff.powerGems = getPowerGems;
+	initEmptyStateUtils.progressDiff.coloredGems = getColoredGems;
+	initEmptyStateUtils.progressDiff.relicProgress = getRelics;
+
+	initEmptyStateUtils.progressDiff.islandUnlockInfos = getIslandUnlocks;
+	initEmptyStateUtils.progressDiff.buildingUnlockInfos = getBuildingUnlocks;
+	initEmptyStateUtils.progressDiff.itemUnlockInfos = getItemUnlocks;
+	initEmptyStateUtils.progressDiff.buildingProgress = getBuildings;
+	initEmptyStateUtils.progressDiff.statueProgress = state.progressDiff?.statueProgress ?? [];
+	initEmptyStateUtils.progressDiff.gangProgress = state.progressDiff?.gangProgress ?? [];
+	initEmptyStateUtils.progressDiff.producerProgress = getProducers;
+	initEmptyStateUtils.progressDiff.seasonProgress = state.progressDiff?.seasonProgress ?? [];
+	initEmptyStateUtils.progressDiff.questProgress = state.progressDiff?.questProgress ?? [];
+	initEmptyStateUtils.progressDiff.currentGangProgress = { defeatedBossIds: getGangs.map(gang => gang.defeatedBossId) };
+
+	initEmptyStateUtils.inventoryDiff.items = getInventories;
+	initEmptyStateUtils.gameStateDiff.producerStates = getProducerStatesWithItems.map(({ producerStates, producingItems }) => ({
+		producerId: producerStates.producerId,
+		state: producerStates.state,
+		produceTimeSeconds: producerStates.produceTimeSeconds,
+		clientTimeStarted: producerStates.clientTimeStarted,
+		producingItems: producingItems,
+	}));
+	initEmptyStateUtils.gameStateDiff.cooldowns = getCooldowns;
+	initEmptyStateUtils.gameStateDiff.reseedTimers = state.gameStateDiff?.reseedTimers ?? [];
+	initEmptyStateUtils.gameStateDiff.unclaimedSeasonPassScore = state.gameStateDiff?.unclaimedSeasonPassScore ?? [];
+}

@@ -98,6 +98,7 @@ import { handleUnlockApiUnlockLand } from '@/services/handle-unlock-api-unlock-l
 import { handleUnlockApiUnlockIsland } from '@/services/handle-unlock-api-unlock-island';
 import { handleUnlockApiUnlockItems } from '@/services/handle-unlock-api-unlock-items';
 import { handleStateApiSyncState } from '@/services/handle-state-api-sync-state';
+import { handleStateApiCompleteState } from '@/services/handle-state-api-complete-state';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -258,7 +259,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProductionApi.upgradeBuildingMissingResources') {
 		return await handleProductionApiUpgradeBuildingMissingResources(c, method, jsonrpc, id, params, session);
 	} else if (method === 'StateApi.completeState') {
-		console.log('StateApi.completeState');
+		return await handleStateApiCompleteState(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppKingAccountApi.updateCurrentAccount') {
 		return await handleAppKingAccountApiUpdateCurrentAccount(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.updateEmailAddress') {
