@@ -1,6 +1,6 @@
 import {
-	Building, ColoredGem, Cooldown,
-	Inventory,
+	Building, BuildingUnlock, ColoredGem, Cooldown,
+	Inventory, IslandUnlockWithRuns,
 	Pack,
 	PowerGem,
 	Producer,
@@ -128,4 +128,16 @@ export interface StatePurchaseProductParams {
 			}
 		]
 	}
+}
+
+export interface StateBuildingUnlockParams {
+	progressDiff?: {
+		buildingUnlockInfos?: BuildingUnlock[];
+	};
+}
+
+export interface StateIslandUnlockParams {
+	progressDiff?: {
+		islandUnlockInfos?: IslandUnlockWithRuns[];
+	};
 }

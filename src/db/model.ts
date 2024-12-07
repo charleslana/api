@@ -20,7 +20,7 @@ import {
 	relics,
 	shopRotations,
 	skins,
-	tutorials,
+	tutorials, unlockedRuns,
 	users
 } from '@/db/schema';
 
@@ -36,6 +36,7 @@ export type Guild = InferSelectModel<typeof guilds>;
 export type Inventory = InferSelectModel<typeof inventories>;
 export type IslandUnlock = InferSelectModel<typeof islandUnlocks>;
 export type LandUnlock = InferSelectModel<typeof landUnlocks>;
+export type UnLockedRun = InferSelectModel<typeof unlockedRuns>;
 export type ItemUnlock = InferSelectModel<typeof itemUnlocks>;
 export type Pack = InferSelectModel<typeof packs>;
 export type PowerGem = InferSelectModel<typeof powerGems>;
@@ -50,3 +51,24 @@ export type Tutorial = InferSelectModel<typeof tutorials>;
 export type ProducerStateWithItems = ProducerState & {
 	producingItems: ProducingItem[];
 };
+
+export type IslandUnlockWithRuns = IslandUnlock & {
+	landUnlockInfos: (LandUnlock & {
+		unlockedRuns: UnLockedRun[];
+	})[];
+};
+
+// export type IslandUnlockWithRuns = {
+// 	islandId: number;
+// 	landUnlockInfos: LandUnlockInfo[];
+// };
+//
+// export type LandUnlockInfo = {
+// 	landId: number;
+// 	unlockedRuns: UnlockedRun[];
+// };
+//
+// export type UnlockedRun = {
+// 	landId: number;
+// };
+

@@ -134,11 +134,18 @@ export const islandUnlocks = pgTable('islandUnlocks', {
 	id: serial('id').primaryKey(),
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
 	islandId: integer('islandId').notNull(),
-	landId: integer('landId').notNull().references(() => landUnlocks.id, { onDelete: 'cascade' })
 });
 
 export const landUnlocks = pgTable('landUnlocks', {
-	id: serial('id').primaryKey(), landId: integer('landId').notNull()
+	id: serial('id').primaryKey(),
+	landId: integer('landId').notNull(),
+	islandUnlockId: integer('islandUnlockId').notNull().references(() => islandUnlocks.id, { onDelete: 'cascade' })
+});
+
+export const unlockedRuns = pgTable('unlockedRuns', {
+	id: serial('id').primaryKey(),
+	landUnlockId: integer('landUnlockId').notNull().references(() => landUnlocks.id, { onDelete: 'cascade' }),
+	landId: integer('landId').notNull(),
 });
 
 export const itemUnlocks = pgTable('itemUnlocks', {

@@ -2,7 +2,7 @@ import type { Env, Variables } from '@/lib/types';
 import { zValidator } from '@hono/zod-validator';
 import { Context, Hono } from 'hono';
 import { z } from 'zod';
-import { trackingApiGetUniqueACId } from '@/services/tracking-api-get-unique-ac-id';
+import { handleTrackingApiGetUniqueACId } from '@/services/handle-tracking-api-get-unique-a-c-id';
 import { handleAdsApiEgpPurchase } from '@/services/handle-ads-api-egp-purchase';
 import { handleAppAbTestApiGetAppUserAbCases } from '@/services/handle-app-ab-test-api-get-app-user-ab-cases';
 import { handleAppApiNotifyAppStart } from '@/services/handle-app-api-notify-app-start';
@@ -93,6 +93,8 @@ import { handleServerAuthLiveOpsApiGetLiveOps } from '@/services/handle-server-a
 import { handleShopApiDeliverOpenTransactions } from '@/services/handle-shop-api-deliver-open-transactions';
 import { handleShopApiLoadProducts } from '@/services/handle-shop-api-load-products';
 import { handleShopApiPurchaseProduct } from '@/services/handle-shop-api-purchase-product';
+import { handleUnlockApiUnlockBuildings } from '@/services/handle-unlock-api-unlock-buildings';
+import { handleUnlockApiUnlockLand } from '@/services/handle-unlock-api-unlock-land';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -121,7 +123,7 @@ crashRoute.post('/', zValidator('query', z.object({
 
 async function handleMethod(c: Context, method: string, jsonrpc: string, id: number, params: any[], session?: string) {
 	if (method === 'TrackingApi.getUniqueACId') {
-		return await trackingApiGetUniqueACId(c);
+		return await handleTrackingApiGetUniqueACId(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppDatabaseApi.getAppDatabase') {
 		return await handleAppDatabaseApiGetAppDatabase(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ApplicationSettingsApi.getSettings') {
@@ -159,7 +161,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'MiloGuildApi.getMyGuild') {
 		return await handleMiloGuildApiGetMyGuild(c, method, jsonrpc, id, params, session);
 	} else if (method === 'UnlockApi.unlockBuildings') {
-		console.log('UnlockApi.unlockBuildings');
+		return await handleUnlockApiUnlockBuildings(c, method, jsonrpc, id, params, session);
 	} else if (method === 'StateApi.syncState') {
 		console.log('StateApi.syncState');
 	} else if (method === 'ShopApi.loadProducts') {
@@ -197,7 +199,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'ProfileApi.setPlayerActiveSkin') {
 		return await handleProfileApiSetPlayerActiveSkin(c, method, jsonrpc, id, params, session);
 	} else if (method === 'UnlockApi.unlockLand') {
-		console.log('UnlockApi.unlockLand');
+		return await handleUnlockApiUnlockLand(c, method, jsonrpc, id, params, session);
 	} else if (method === 'UnlockApi.unlockItems') {
 		console.log('UnlockApi.unlockItems');
 	} else if (method === 'ProgressApi.startTutorial') {

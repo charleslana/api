@@ -66,6 +66,9 @@ async function updateProducerState(c: Context<{
 			.returning();
 		producerStateId = result[0].id;
 	}
+	if (!item.producingItems || !item.producingItems.length) {
+		return;
+	}
 	const promises = item.producingItems.map(async (item) => {
 		if (item.itemTypeId && Number.isInteger(item.itemTypeId) && item.count && Number.isInteger(item.count)) {
 			const existingItem = await db

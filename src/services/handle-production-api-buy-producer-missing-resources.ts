@@ -34,7 +34,7 @@ export async function handleProductionApiBuyProducerMissingResources(c: Context<
 	}
 }
 
-async function updateProducer(c: Context<{
+export async function updateProducer(c: Context<{
 	Bindings: Env, Variables: Variables
 }>, user: User, item: Producer) {
 	const db = c.get('db');
