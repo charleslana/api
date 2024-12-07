@@ -97,6 +97,7 @@ import { handleUnlockApiUnlockBuildings } from '@/services/handle-unlock-api-unl
 import { handleUnlockApiUnlockLand } from '@/services/handle-unlock-api-unlock-land';
 import { handleUnlockApiUnlockIsland } from '@/services/handle-unlock-api-unlock-island';
 import { handleUnlockApiUnlockItems } from '@/services/handle-unlock-api-unlock-items';
+import { handleStateApiSyncState } from '@/services/handle-state-api-sync-state';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -165,7 +166,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'UnlockApi.unlockBuildings') {
 		return await handleUnlockApiUnlockBuildings(c, method, jsonrpc, id, params, session);
 	} else if (method === 'StateApi.syncState') {
-		console.log('StateApi.syncState');
+		return await handleStateApiSyncState(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ShopApi.loadProducts') {
 		return await handleShopApiLoadProducts(c, method, jsonrpc, id, params, session);
 	} else if (method === 'RunnerApi.playerDeath') {
