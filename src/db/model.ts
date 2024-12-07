@@ -58,17 +58,3 @@ export type IslandUnlockWithRuns = IslandUnlock & {
 	})[];
 };
 
-// export type IslandUnlockWithRuns = {
-// 	islandId: number;
-// 	landUnlockInfos: LandUnlockInfo[];
-// };
-//
-// export type LandUnlockInfo = {
-// 	landId: number;
-// 	unlockedRuns: UnlockedRun[];
-// };
-//
-// export type UnlockedRun = {
-// 	landId: number;
-// };
-

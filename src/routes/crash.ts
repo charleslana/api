@@ -95,6 +95,7 @@ import { handleShopApiLoadProducts } from '@/services/handle-shop-api-load-produ
 import { handleShopApiPurchaseProduct } from '@/services/handle-shop-api-purchase-product';
 import { handleUnlockApiUnlockBuildings } from '@/services/handle-unlock-api-unlock-buildings';
 import { handleUnlockApiUnlockLand } from '@/services/handle-unlock-api-unlock-land';
+import { handleUnlockApiUnlockIsland } from '@/services/handle-unlock-api-unlock-island';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
@@ -239,7 +240,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'AdsApi.egpPurchase') {
 		return await handleAdsApiEgpPurchase(c, method, jsonrpc, id, params, session);
 	} else if (method === 'UnlockApi.unlockIsland') {
-		console.log('UnlockApi.unlockIsland');
+		return await handleUnlockApiUnlockIsland(c, method, jsonrpc, id, params, session);
 	} else if (method === 'QuestApi.reportQuestProgress') {
 		return await handleQuestApiReportQuestProgress(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.startProducerMissingResources') {
