@@ -15,7 +15,7 @@ export async function handleProgressApiFinishedTutorial(c: Context<{
 	try {
 		const user = await getUserSession(c, session);
 		if (!user) {
-			return;
+			return returnGenericError(jsonrpc, id);
 		}
 		const state = params[0] as StateTutorialParams;
 		if (!state || !state.progressDiff || !state.progressDiff.tutorialProgress || !state.progressDiff.tutorialProgress.length) {
