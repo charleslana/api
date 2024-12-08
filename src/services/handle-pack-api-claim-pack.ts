@@ -22,7 +22,7 @@ export async function handlePackApiClaimPack(c: Context<{
 			return returnGenericError(jsonrpc, id);
 		}
 		const promises = state.progressDiff.packProgress.map(async (item) => {
-			if (item.packId && Number.isInteger(item.packId)) {
+			if (item.packId) {
 				return await updatePack(c, user, item);
 			}
 		});

@@ -157,7 +157,7 @@ export const itemUnlocks = pgTable('itemUnlocks', {
 export const packs = pgTable('packs', {
 	id: serial('id').primaryKey(),
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
-	packId: integer('packId').notNull()
+	packId: text('packId').notNull()
 });
 
 export const powerGems = pgTable('powerGems', {
