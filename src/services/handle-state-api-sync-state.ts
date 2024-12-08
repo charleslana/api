@@ -82,9 +82,6 @@ function setLoggedOutState(state?: StateInterface) {
 }
 
 async function setLoggedInState(c: Context<{ Bindings: Env, Variables: Variables }>, user: User, state?: StateInterface) {
-	if (!state) {
-		return;
-	}
 	const db = c.get('db');
 	const [
 		getInventories,
@@ -193,11 +190,11 @@ async function setLoggedInState(c: Context<{ Bindings: Env, Variables: Variables
 	initEmptyStateUtils.progressDiff.buildingUnlockInfos = getBuildingUnlocks;
 	initEmptyStateUtils.progressDiff.itemUnlockInfos = getItemUnlocks;
 	initEmptyStateUtils.progressDiff.buildingProgress = getBuildings;
-	initEmptyStateUtils.progressDiff.statueProgress = state.progressDiff?.statueProgress ?? [];
-	initEmptyStateUtils.progressDiff.gangProgress = state.progressDiff?.gangProgress ?? [];
+	initEmptyStateUtils.progressDiff.statueProgress = state?.progressDiff?.statueProgress ?? [];
+	initEmptyStateUtils.progressDiff.gangProgress = state?.progressDiff?.gangProgress ?? [];
 	initEmptyStateUtils.progressDiff.producerProgress = getProducers;
-	initEmptyStateUtils.progressDiff.seasonProgress = state.progressDiff?.seasonProgress ?? [];
-	initEmptyStateUtils.progressDiff.questProgress = state.progressDiff?.questProgress ?? [];
+	initEmptyStateUtils.progressDiff.seasonProgress = state?.progressDiff?.seasonProgress ?? [];
+	initEmptyStateUtils.progressDiff.questProgress = state?.progressDiff?.questProgress ?? [];
 	initEmptyStateUtils.progressDiff.currentGangProgress = { defeatedBossIds: getGangs.map(gang => gang.defeatedBossId) };
 
 	initEmptyStateUtils.inventoryDiff.items = getInventories;
@@ -209,6 +206,6 @@ async function setLoggedInState(c: Context<{ Bindings: Env, Variables: Variables
 		producingItems: producingItems,
 	}));
 	initEmptyStateUtils.gameStateDiff.cooldowns = getCooldowns;
-	initEmptyStateUtils.gameStateDiff.reseedTimers = state.gameStateDiff?.reseedTimers ?? [];
-	initEmptyStateUtils.gameStateDiff.unclaimedSeasonPassScore = state.gameStateDiff?.unclaimedSeasonPassScore ?? [];
+	initEmptyStateUtils.gameStateDiff.reseedTimers = state?.gameStateDiff?.reseedTimers ?? [];
+	initEmptyStateUtils.gameStateDiff.unclaimedSeasonPassScore = state?.gameStateDiff?.unclaimedSeasonPassScore ?? [];
 }
