@@ -75,7 +75,7 @@ export const coloredGems = pgTable('coloredGems', {
 export const cooldowns = pgTable('cooldowns', {
 	id: serial('id').primaryKey(),
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
-	cooldownId: integer('cooldownId').notNull(),
+	cooldownId: text('cooldownId').notNull(),
 	cooldownSeconds: integer('cooldownSeconds').notNull(),
 	clientTimeStarted: bigint('clientTimeStarted', { mode: 'number' }).notNull(),
 });
