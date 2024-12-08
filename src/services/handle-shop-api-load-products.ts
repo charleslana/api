@@ -57,13 +57,8 @@ export async function handleShopApiLoadProducts(c: Context<{
 		if (!state || !state.placementIds) {
 			return returnGenericError(jsonrpc, id);
 		}
-		const result = {
-			jsonrpc, id, result: {
-				placementId: id, metadata: [], products: []
-			}
-		};
 		const requestedIDs = state.placementIds;
-		const placements: Placement[] = await buildPlacements(state.placementIds, c, user);
+		const placements: Placement[] = await buildPlacements(requestedIDs, c, user);
 		const response = buildResponse(jsonrpc, id, placements);
 		return response;
 	} catch (error) {
@@ -157,7 +152,8 @@ async function createFreeRotatingOffers(placementId: string, c: Context<{
 	const model = {} as ShopRotation;
 	model.userId = user.id;
 	model.placementId = placementId;
-	const [, shopRotation] = await Promise.all([deleteShop(c, user, model), createShopCreateFreeRotatingOffers(placementId, user.id, c)]);
+	await deleteShop(c, user, model);
+	const shopRotation = await createShopCreateFreeRotatingOffers(placementId, user.id, c);
 	return responseFreeRotationOffers(shopRotation!);
 }
 
@@ -187,9 +183,7 @@ function responseFreeRotationOffers(shopRotation: ShopRotation) {
 }
 
 function getTimeLeftUntil() {
-	const now = Date.now() / 1000;
-	const timeLeft = 86400 - (now % 86400);
-	return timeLeft;
+	return 3600 * 3600;
 }
 
 async function deleteShop(c: Context<{ Bindings: Env, Variables: Variables }>, user: User, item: ShopRotation) {

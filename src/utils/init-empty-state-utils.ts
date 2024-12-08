@@ -17,7 +17,7 @@ export const initEmptyStateUtils = {
 		producerProgress: [{}],
 		tutorialProgress: [{}],
 		liveOpProgress: {
-			liveOpDragonsOrderProgress: [{}],
+			liveOpDragonsOrderProgress: [],
 		},
 		packProgress: [{}],
 		seasonProgress: [

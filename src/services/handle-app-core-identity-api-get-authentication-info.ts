@@ -8,15 +8,15 @@ export async function handleAppCoreIdentityApiGetAuthenticationInfo(c: Context<{
 }>, method: string, jsonrpc: string, id: number, params: any[], session?: string) {
 	const db = c.get('db');
 	try {
+		let emailAddr = '';
 		const user = await getUserSession(c, session);
-		if (!user) {
-			return;
+		if (user) {
+			emailAddr = user.email;
 		}
-		const emailAddr = user.email;
 		const result: { methodInfos: any[] } = { methodInfos: [] };
 		const list = params[0] as number[];
 		if (!list || !list.length) {
-			return;
+			emailAddr = '';
 		}
 		for (const item of list) {
 			if (item === 1) {

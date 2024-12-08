@@ -4,7 +4,6 @@ import {
 	Pack,
 	PowerGem,
 	Producer,
-	ProducerState,
 	ProducerStateWithItems, Relic,
 	Tutorial
 } from '@/db/model';
@@ -70,12 +69,6 @@ export interface StatePackParams {
 export interface StateProducerParams {
 	progressDiff?: {
 		producerProgress?: Producer[];
-	};
-}
-
-export interface StateProducerStateParams {
-	progressDiff?: {
-		producerStates?: ProducerState[];
 	};
 }
 

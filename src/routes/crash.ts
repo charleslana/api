@@ -99,10 +99,14 @@ import { handleUnlockApiUnlockIsland } from '@/services/handle-unlock-api-unlock
 import { handleUnlockApiUnlockItems } from '@/services/handle-unlock-api-unlock-items';
 import { handleStateApiSyncState } from '@/services/handle-state-api-sync-state';
 import { handleStateApiCompleteState } from '@/services/handle-state-api-complete-state';
+import { decompressRequestBody } from '@/middleware/decompress-request-body';
+import {
+	handleAppEmailAndPasswordIdentityApiAuthenticate
+} from '@/services/handle-app-email-and-password-identity-api-authenticate';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
-crashRoute.post('/', zValidator('query', z.object({
+crashRoute.post('/', decompressRequestBody, zValidator('query', z.object({
 	_session: z.string().optional()
 })), zValidator('json', z.array(z.object({
 	jsonrpc: z.string(), id: z.coerce.number(), method: z.string(), params: z.array(z.any())
@@ -191,7 +195,7 @@ async function handleMethod(c: Context, method: string, jsonrpc: string, id: num
 	} else if (method === 'PackApi.claimPack') {
 		return await handlePackApiClaimPack(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.authenticate') {
-		return await handleAppDatabaseApiGetAppDatabase(c, method, jsonrpc, id, params, session);
+		return await handleAppEmailAndPasswordIdentityApiAuthenticate(c, method, jsonrpc, id, params, session);
 	} else if (method === 'AppEmailAndPasswordIdentityApi.link') {
 		return await handleAppEmailAndPasswordIdentityApiLink(c, method, jsonrpc, id, params, session);
 	} else if (method === 'ProductionApi.startProducer') {

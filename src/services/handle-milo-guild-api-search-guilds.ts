@@ -40,7 +40,7 @@ export async function handleMiloGuildApiSearchGuilds(c: Context<{
 			const getGuilds = await db
 				.select({
 					guild: guilds,
-					members: sql`array_agg(json_build_object(
+					members: sql<GuildMember[]>`array_agg(json_build_object(
           'id', ${guildMembers.id},
           'userId', ${guildMembers.userId},
           'status', ${guildMembers.status},
@@ -49,14 +49,14 @@ export async function handleMiloGuildApiSearchGuilds(c: Context<{
           'crashPoints', ${users.crashPointsEarned},
           'createdAt', ${guildMembers.createdAt}
         	))`.as('members'),
-					totalCrashPoints: sql`SUM(${users.crashPointsEarned})`.as('totalCrashPoints'),
-					totalMembers: sql`COUNT(${guildMembers.id})`.as('totalMembers'),
+					totalCrashPoints: sql<number>`SUM(${users.crashPointsEarned})`.as('totalCrashPoints'),
+					totalMembers: sql<number>`COUNT(${guildMembers.id})`.as('totalMembers'),
 				})
 				.from(guilds)
 				.leftJoin(guildMembers, eq(guilds.id, guildMembers.guildId))
 				.leftJoin(users, eq(guildMembers.userId, users.id))
 				.groupBy(guilds.id)
-				.orderBy(sql`SUM(${users.crashPointsEarned}) DESC`)
+				.orderBy(sql<number>`SUM(${users.crashPointsEarned}) DESC`)
 				.limit(50);
 			const guildsFound = getGuilds.map((guild) => {
 				const state = JSON.parse(JSON.stringify(searchGuildStateUtils));
@@ -64,9 +64,9 @@ export async function handleMiloGuildApiSearchGuilds(c: Context<{
 				state.name = guild.guild.name;
 				state.description = guild.guild.description;
 				state.editableProperties[0].value = guild.guild.badgeId.toString();
-				state.computedProperties[4].value = (guild.totalCrashPoints as number).toString();
-				state.numMembers = guild.totalMembers;
-				state.members = (guild.members as GuildMember[]).map((member) => {
+				state.computedProperties[4].value = guild.totalCrashPoints.toString();
+				state.numMembers = +guild.totalMembers;
+				state.members = guild.members.map((member) => {
 					return {
 						coreUserId: member.userId,
 						status: member.status,
@@ -85,14 +85,14 @@ export async function handleMiloGuildApiSearchGuilds(c: Context<{
 		}
 		else {
 			const state = params[0] as StateSearchGuildParams;
-			if (!state || !state.searchString || !state.minimumLevel) {
+			if (!state || !state.searchString) {
 				return result;
 			}
 			const searchTerm = `%${state.searchString}%`;
 			const getGuilds = await db
 				.select({
 					guild: guilds,
-					members: sql`array_agg(json_build_object(
+					members: sql<GuildMember[]>`array_agg(json_build_object(
           'id', ${guildMembers.id},
           'userId', ${guildMembers.userId},
           'status', ${guildMembers.status},
@@ -101,15 +101,15 @@ export async function handleMiloGuildApiSearchGuilds(c: Context<{
           'crashPoints', ${users.crashPointsEarned},
           'createdAt', ${guildMembers.createdAt}
         	))`.as('members'),
-					totalCrashPoints: sql`SUM(${users.crashPointsEarned})`.as('totalCrashPoints'),
-					totalMembers: sql`COUNT(${guildMembers.id})`.as('totalMembers'),
+					totalCrashPoints: sql<number>`SUM(${users.crashPointsEarned})`.as('totalCrashPoints'),
+					totalMembers: sql<number>`COUNT(${guildMembers.id})`.as('totalMembers'),
 				})
 				.from(guilds)
 				.leftJoin(guildMembers, eq(guilds.id, guildMembers.guildId))
 				.leftJoin(users, eq(guildMembers.userId, users.id))
 				.where(ilike(guilds.name, searchTerm))
 				.groupBy(guilds.id)
-				.orderBy(sql`SUM(${users.crashPointsEarned}) DESC`)
+				.orderBy(sql<number>`SUM(${users.crashPointsEarned}) DESC`)
 				.limit(50);
 			const guildsFound = getGuilds.map((guild) => {
 				const state = JSON.parse(JSON.stringify(searchGuildStateUtils));
@@ -117,9 +117,9 @@ export async function handleMiloGuildApiSearchGuilds(c: Context<{
 				state.name = guild.guild.name;
 				state.description = guild.guild.description;
 				state.editableProperties[0].value = guild.guild.badgeId.toString();
-				state.computedProperties[4].value = (guild.totalCrashPoints as number).toString();
-				state.numMembers = guild.totalMembers;
-				state.members = (guild.members as GuildMember[]).map((member) => {
+				state.computedProperties[4].value = guild.totalCrashPoints.toString();
+				state.numMembers = +guild.totalMembers;
+				state.members = guild.members.map((member) => {
 					return {
 						coreUserId: member.userId,
 						status: member.status,

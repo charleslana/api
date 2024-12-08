@@ -8,25 +8,26 @@ import {
 	buildings, buildingUnlocks, coloredGems, cooldowns,
 	gangs,
 	inventories, islandUnlocks,
-	itemUnlocks,
+	itemUnlocks, landUnlocks,
 	packs,
 	powerGems, producers,
 	producerStates, producingItems, relics,
 	skins,
-	tutorials
+	tutorials, unlockedRuns
 } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
-import { ProducingItem, User } from '@/db/model';
+import { LandUnlock, ProducingItem, UnLockedRun, User } from '@/db/model';
+
+export type LandUnlockWithRuns = LandUnlock & {
+	unlockedRuns: UnLockedRun[];
+};
 
 export async function handleStateApiSyncState(c: Context<{
 	Bindings: Env, Variables: Variables
 }>, method: string, jsonrpc: string, id: number, params: any[], session?: string) {
 	const db = c.get('db');
 	try {
-		const state = params[0] as StateInterface;
-		if (!state) {
-			return;
-		}
+		const state = params[0] as StateInterface | undefined;
 		const user = await getUserSession(c, session);
 		if (!user) {
 			setLoggedOutState(state);
@@ -48,7 +49,10 @@ export async function handleStateApiSyncState(c: Context<{
 	}
 }
 
-function setLoggedOutState(state: StateInterface) {
+function setLoggedOutState(state?: StateInterface) {
+	if (!state) {
+		return;
+	}
 	initEmptyStateUtils.progressDiff.xp = state.progressDiff?.xp ?? 0;
 	initEmptyStateUtils.progressDiff.level = state.progressDiff?.level ?? 0;
 	initEmptyStateUtils.progressDiff.crashPointsEarned = state.progressDiff?.crashPointsEarned ?? 0;
@@ -77,7 +81,10 @@ function setLoggedOutState(state: StateInterface) {
 	initEmptyStateUtils.gameStateDiff.unclaimedSeasonPassScore = state.gameStateDiff?.unclaimedSeasonPassScore ?? [];
 }
 
-async function setLoggedInState(c: Context<{ Bindings: Env, Variables: Variables }>, user: User, state: StateInterface) {
+async function setLoggedInState(c: Context<{ Bindings: Env, Variables: Variables }>, user: User, state?: StateInterface) {
+	if (!state) {
+		return;
+	}
 	const db = c.get('db');
 	const [
 		getInventories,
@@ -90,17 +97,17 @@ async function setLoggedInState(c: Context<{ Bindings: Env, Variables: Variables
 		getProducerStatesWithItems,
 		getBuildings,
 		getBuildingUnlocks,
-		getIslandUnlocks,
+		getIslandUnlocksWithLandUnlocks,
 		getColoredGems,
 		getRelics,
 		getProducers,
 		getCooldowns,
 	] = await Promise.all([
-		db.select().from(inventories).where(eq(inventories.userId, user.id)),
+		db.select({itemTypeId: inventories.itemTypeId, count: inventories.count}).from(inventories).where(eq(inventories.userId, user.id)),
 		db.select().from(packs).where(eq(packs.userId, user.id)),
 		db.select().from(skins).where(eq(skins.userId, user.id)),
 		db.select().from(tutorials).where(eq(tutorials.userId, user.id)),
-		db.select().from(powerGems).where(eq(powerGems.userId, user.id)),
+		db.select({islandId: powerGems.islandId, numPowerGems: powerGems.numPowerGems}).from(powerGems).where(eq(powerGems.userId, user.id)),
 		db.select().from(gangs).where(eq(gangs.userId, user.id)),
 		db.select().from(itemUnlocks).where(eq(itemUnlocks.userId, user.id)),
 		db.select({
@@ -114,9 +121,30 @@ async function setLoggedInState(c: Context<{ Bindings: Env, Variables: Variables
 			.leftJoin(producingItems, eq(producerStates.id, producingItems.producerStateId))
 			.where(eq(producerStates.userId, user.id))
 			.groupBy(producerStates.id),
-	db.select().from(buildings).where(eq(buildings.userId, user.id)),
+		db.select().from(buildings).where(eq(buildings.userId, user.id)),
 		db.select().from(buildingUnlocks).where(eq(buildingUnlocks.userId, user.id)),
-		db.select().from(islandUnlocks).where(eq(islandUnlocks.userId, user.id)),
+		db.select({
+			islandUnlocks: islandUnlocks,
+			landUnlocks: sql<LandUnlockWithRuns[]>`array_agg(
+        json_build_object(
+            'id', ${landUnlocks.id},
+			'landId', ${landUnlocks.landId},
+			'unlockedRuns', COALESCE((
+			SELECT array_agg(
+			json_build_object(
+			'id', ${unlockedRuns.id},
+			'landId', ${unlockedRuns.landId}
+			)
+			)
+			FROM ${unlockedRuns}
+			WHERE ${unlockedRuns.landUnlockId} = ${landUnlocks.id}
+			), array[]::json[])
+			)
+			)`.as('landUnlocks'),
+		}).from(islandUnlocks)
+			.leftJoin(landUnlocks, eq(islandUnlocks.id, landUnlocks.islandUnlockId))
+			.where(eq(islandUnlocks.userId, user.id))
+			.groupBy(islandUnlocks.id),
 		db.select().from(coloredGems).where(eq(coloredGems.userId, user.id)),
 		db.select().from(relics).where(eq(relics.userId, user.id)),
 		db.select().from(producers).where(eq(producers.userId, user.id)),
@@ -149,7 +177,19 @@ async function setLoggedInState(c: Context<{ Bindings: Env, Variables: Variables
 	initEmptyStateUtils.progressDiff.coloredGems = getColoredGems;
 	initEmptyStateUtils.progressDiff.relicProgress = getRelics;
 
-	initEmptyStateUtils.progressDiff.islandUnlockInfos = getIslandUnlocks;
+	initEmptyStateUtils.progressDiff.islandUnlockInfos = getIslandUnlocksWithLandUnlocks.map(({ islandUnlocks, landUnlocks }) => ({
+		islandId: islandUnlocks.islandId,
+		landUnlockInfos: landUnlocks.length > 0
+			? landUnlocks.map(landUnlock => ({
+				id: landUnlock.id,
+				landId: landUnlock.landId,
+				unlockedRuns: landUnlock.unlockedRuns.length > 0
+					? landUnlock.unlockedRuns
+					: [],
+			}))
+			: [],
+	}));
+
 	initEmptyStateUtils.progressDiff.buildingUnlockInfos = getBuildingUnlocks;
 	initEmptyStateUtils.progressDiff.itemUnlockInfos = getItemUnlocks;
 	initEmptyStateUtils.progressDiff.buildingProgress = getBuildings;

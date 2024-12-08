@@ -2,7 +2,7 @@ import { Context } from 'hono';
 import type { Env, Variables } from '@/lib/types';
 import { returnGenericSuccess } from '@/shared/return-generic-success';
 import { returnGenericError } from '@/shared/return-generic-error';
-import { StateProducerStateParams } from '@/interfaces/state-params';
+import { StateGameDiffProducerStateParams } from '@/interfaces/state-params';
 import { Producer, User } from '@/db/model';
 import { producerStates } from '@/db/schema';
 import { and, eq } from 'drizzle-orm';
@@ -17,11 +17,11 @@ export async function handleProductionApiCollectProducer(c: Context<{
 		if (!user) {
 			return;
 		}
-		const state = params[0] as StateProducerStateParams;
-		if (!state || !state.progressDiff || !state.progressDiff.producerStates || !state.progressDiff.producerStates.length) {
+		const state = params[0] as StateGameDiffProducerStateParams;
+		if (!state || !state.gameStateDiff || !state.gameStateDiff.producerStates || !state.gameStateDiff.producerStates.length) {
 			return returnGenericError(jsonrpc, id);
 		}
-		const promises = state.progressDiff.producerStates.map(async (item) => {
+		const promises = state.gameStateDiff.producerStates.map(async (item) => {
 			if (item.producerId && Number.isInteger(item.producerId)) {
 				return await deleteProducerState(c, user, item);
 			}

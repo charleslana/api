@@ -26,6 +26,7 @@ export async function handleGroupChatApiPoll(c: Context<{
 		}
 		const chats = await db.select().from(groupChats).where(eq(groupChats.guildId, user.guildId)).orderBy(desc(groupChats.timestampMs)).limit(50);
 		if (chats.length > 0) {
+			chats.reverse();
 			const messages = chats.map(chat => ({
 				id: chat.id,
 				type: 0,

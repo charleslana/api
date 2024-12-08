@@ -17,7 +17,7 @@ export async function handleUnlockApiUnlockBuildings(c: Context<{
 	try {
 		const user = await getUserSession(c, session);
 		if (!user) {
-			return;
+			return returnGenericError(jsonrpc, id);
 		}
 		await Promise.all([
 			handleUpdateProducer(c, jsonrpc, id, params, user),

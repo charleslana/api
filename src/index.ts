@@ -7,11 +7,15 @@ import { appRoute } from '@/routes/app';
 import { userAgentMiddleware } from '@/middleware/user-agent-middleware';
 import { customLogger } from '@/middleware/custom-logger';
 import { crashRoute } from '@/routes/crash';
-// import { compress } from 'hono/compress';
+import { decompressRequestBody } from '@/middleware/decompress-request-body';
+// import { promisify } from 'util';
+// import * as zlib from 'zlib';
+// import { compressResponse } from '@/middleware/compress-response';
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 
-// app.use(compress());
+// const gunzip = promisify(zlib.gunzip);
+// app.use('*', compressResponse);
 app.use(logger(customLogger));
 app.use(dbMiddleware);
 app.use(userAgentMiddleware);
@@ -19,12 +23,40 @@ app.use(userAgentMiddleware);
 app.get('/api', async (c) => {
 	return c.redirect('/api/v1/app');
 });
+const isLocal = process.env.NODE_ENV === 'local';
+const apiLocal = '/v1/c/api/api';
+const apiEventLocal = '/v1/events/cotr/api/api';
+
+const apiProd = '/v1/c';
+const apiEventProd = '/v1/events/cotr';
+
+const apiBase = isLocal ? apiLocal : apiProd;
+console.log('rota api', apiBase);
+const apiEventBase = isLocal ? apiEventLocal : apiEventProd;
+console.log('rota event', apiEventBase);
 
 app.route('/api/v1/app', appRoute);
 // app.route('/api/v1/user', userRoute);
-app.route('/v1/c', crashRoute);
-
-app.get('/v1/events/cotr', async (c) => {
+// app.post('/v1/c/api/api', async (c) => {
+// 	const bodyBuffer = await c.req.arrayBuffer();
+//
+// 	// Se o conteúdo estiver compactado (gzip), descompacte-o
+// 	const uncompressedBuffer = await gunzip(Buffer.from(bodyBuffer));
+//
+// 	// Converter o buffer descompactado em JSON
+// 	const body = JSON.parse(uncompressedBuffer.toString());
+//
+// 	// Fazer log do corpo descompactado
+// 	console.log(body);
+//
+// 	// Retornar uma resposta
+// 	return c.json({
+// 		message: 'Dados recebidos com sucesso',
+// 		receivedData: body
+// 	});
+// });
+app.route(apiBase, crashRoute);
+app.get(apiEventBase, decompressRequestBody, async (c) => {
 	return c.json({
 		message: 'Ok'
 	});

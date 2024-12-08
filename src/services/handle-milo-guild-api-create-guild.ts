@@ -19,7 +19,7 @@ export async function handleMiloGuildApiCreateGuild(c: Context<{
 			return returnGenericError(jsonrpc, id);
 		}
 		const state = params[0] as StateCreateGuildParams;
-		if (!state || !state.guildBadge || state.guildBadge < 0 || state.guildBadge > 5 || !state.guildName || !validateName(state.guildName) || state.guildName.trim().length < 3 || state.guildName.trim().length > 32 || !state.guildDescription || state.guildDescription.trim().length < 1 || state.guildDescription.trim().length > 120) {
+		if (!state || !state.guildBadge || state.guildBadge < 0 || state.guildBadge > 5 || !state.guildName || !validateName(state.guildName) || state.guildName.trim().length < 3 || state.guildName.trim().length > 32 || (state.guildDescription && state.guildDescription.trim().length > 120)) {
 			return returnGenericError(jsonrpc, id);
 		}
 		const [inventory] = await db.select().from(inventories)
@@ -32,7 +32,7 @@ export async function handleMiloGuildApiCreateGuild(c: Context<{
 			return returnGenericError(jsonrpc, id);
 		}
 		const [newGuild] = await db.insert(guilds).values({
-			name: state.guildName.trim(), description: state.guildDescription.trim(), badgeId: state.guildBadge,
+			name: state.guildName.trim(), description: state.guildDescription?.trim(), badgeId: state.guildBadge,
 		}).returning({ id: guilds.id });
 		await Promise.all([
 			db.insert(guildMembers).values({userId: user.id, guildId: newGuild.id}),

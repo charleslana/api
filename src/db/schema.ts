@@ -77,7 +77,7 @@ export const cooldowns = pgTable('cooldowns', {
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
 	cooldownId: integer('cooldownId').notNull(),
 	cooldownSeconds: integer('cooldownSeconds').notNull(),
-	clientTimeStarted: integer('clientTimeStarted').notNull()
+	clientTimeStarted: bigint('clientTimeStarted', { mode: 'number' }).notNull(),
 });
 
 export const gangs = pgTable('gangs', {
@@ -89,9 +89,9 @@ export const gangs = pgTable('gangs', {
 export const groupChats = pgTable('groupChats', {
 	id: serial('id').primaryKey(),
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
-	guildId: integer('guildId').notNull(),
+	guildId: integer('guildId').notNull().references(() => guilds.id, { onDelete: 'cascade' }),
 	timestampMs: bigint('timestampMs', { mode: 'number' }).notNull(),
-	body: varchar('body', { length: 240 }).notNull()
+	body: varchar('body', { length: 240 }).notNull(),
 });
 
 export const guildMembers = pgTable('guildMembers', {
@@ -109,7 +109,7 @@ export const guildMembers = pgTable('guildMembers', {
 export const guilds = pgTable('guilds', {
 	id: serial('id').primaryKey(),
 	name: varchar('name', { length: 32 }).unique().notNull(),
-	description: varchar('description', { length: 120 }).notNull(),
+	description: varchar('description', { length: 120 }),
 	badgeId: integer('badgeId').notNull(),
 	isApplicationRequired: boolean('isApplicationRequired').default(false).notNull(),
 	maxNumMembers: integer('maxNumMembers').default(30).notNull(),
@@ -172,8 +172,8 @@ export const producerStates = pgTable('producerStates', {
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
 	producerId: integer('producerId').notNull(),
 	state: text('state').notNull(),
-	produceTimeSeconds: integer('produceTimeSeconds').notNull(),
-	clientTimeStarted: integer('clientTimeStarted').notNull(),
+	produceTimeSeconds: bigint('produceTimeSeconds', { mode: 'number' }).notNull(),
+	clientTimeStarted: bigint('clientTimeStarted', { mode: 'number' }).notNull(),
 });
 
 export const producingItems = pgTable('producingItems', {

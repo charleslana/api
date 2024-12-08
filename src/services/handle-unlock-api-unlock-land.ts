@@ -15,11 +15,11 @@ export async function handleUnlockApiUnlockLand(c: Context<{
 	try {
 		const user = await getUserSession(c, session);
 		if (!user) {
-			return;
+			return returnGenericError(jsonrpc, id);
 		}
 		const state = params[0] as StateIslandUnlockParams;
 		if (!state.progressDiff || !state.progressDiff.islandUnlockInfos || !state.progressDiff.islandUnlockInfos.length) {
-			return;
+			return returnGenericError(jsonrpc, id);
 		}
 		const promises = state.progressDiff.islandUnlockInfos.map(async (item) => {
 			return await updateUnlockLand(c, user, item);

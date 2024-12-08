@@ -5,5 +5,9 @@ export async function handlePushNotificationTokenApiUpdatePushNotificationToken2
 	Bindings: Env, Variables: Variables
 }>, method: string, jsonrpc: string, id: number, params: any[], session?: string) {
 	const db = c.get('db');
-	return null;
+	return {
+		jsonrpc,
+		id,
+		result: null,
+	};
 }
