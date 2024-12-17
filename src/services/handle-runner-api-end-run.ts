@@ -105,7 +105,7 @@ async function updateCooldown(c: Context<{
 		if (existingItem) {
 			return db
 				.update(cooldowns)
-				.set({ cooldownSeconds: item.cooldownSeconds, clientTimeStarted: cooldowns.clientTimeStarted })
+				.set({ cooldownSeconds: item.cooldownSeconds, clientTimeStarted: item.clientTimeStarted })
 				.where(and(eq(cooldowns.userId, user.id), eq(cooldowns.cooldownId, item.cooldownId)))
 				.returning();
 		}
