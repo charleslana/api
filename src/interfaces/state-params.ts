@@ -26,6 +26,7 @@ export interface StateBuildingParams {
 
 export interface StateProgressParams {
 	skinId?: number;
+	runDuration?: string;
 	progressDiff?: {
 		xp?: number;
 		level?: number;

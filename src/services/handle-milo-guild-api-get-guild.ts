@@ -72,7 +72,7 @@ export async function handleMiloGuildApiGetGuild(c: Context<{
 		const state = guildStateUtils;
 		state.guildId = guildDetails.guild.id;
 		state.name = guildDetails.guild.name;
-		state.description = guildDetails.guild.description;
+		state.description = guildDetails.guild.description ?? '';
 		state.numMembers = guildDetails.totalMembers as number;
 		state.maxNumMembers = guildDetails.guild.maxNumMembers;
 		state.editableProperties[0].value = guildDetails.guild.badgeId.toString();

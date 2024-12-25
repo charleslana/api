@@ -28,6 +28,7 @@ export const users = pgTable('users', {
 	crashPointsEarned: integer('crashPointsEarned').default(0).notNull(),
 	skinId: integer('skinId').default(81329).notNull(),
 	guildId: integer('guildId'),
+	runDuration: text('runDuration'),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at')
 		.defaultNow()

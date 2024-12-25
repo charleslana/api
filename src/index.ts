@@ -8,6 +8,7 @@ import { userAgentMiddleware } from '@/middleware/user-agent-middleware';
 import { customLogger } from '@/middleware/custom-logger';
 import { crashRoute } from '@/routes/crash';
 import { decompressRequestBody } from '@/middleware/decompress-request-body';
+import { publicRoute } from '@/routes/public';
 // import { promisify } from 'util';
 // import * as zlib from 'zlib';
 // import { compressResponse } from '@/middleware/compress-response';
@@ -56,6 +57,8 @@ app.route('/api/v1/app', appRoute);
 // 	});
 // });
 app.route(apiBase, crashRoute);
+app.route('/public', publicRoute);
+console.log('rota public', '/public');
 app.get(apiEventBase, decompressRequestBody, async (c) => {
 	return c.json({
 		message: 'Ok'

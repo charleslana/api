@@ -31,7 +31,8 @@ export async function updateProgress(c: Context<{
 					xp: user.xp + state.progressDiff.xp,
 					level: user.level + state.progressDiff.level,
 					crashPointsEarned: user.crashPointsEarned + state.progressDiff.crashPointsEarned,
-					skinId: state.skinId
+					skinId: state.skinId,
+					runDuration: state.runDuration,
 				})
 				.where(eq(users.id, user.id));
 		}
