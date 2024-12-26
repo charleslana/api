@@ -1,15 +1,15 @@
 import {
 	AnyPgColumn,
+	bigint,
 	boolean,
+	doublePrecision,
 	integer,
 	pgTable,
 	serial,
 	text,
 	timestamp,
 	uniqueIndex,
-	varchar,
-	bigint,
-	doublePrecision
+	varchar
 } from 'drizzle-orm/pg-core';
 import { SQL, sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
@@ -79,7 +79,7 @@ export const cooldowns = pgTable('cooldowns', {
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
 	cooldownId: text('cooldownId').notNull(),
 	cooldownSeconds: integer('cooldownSeconds').notNull(),
-	clientTimeStarted: bigint('clientTimeStarted', { mode: 'number' }).notNull(),
+	clientTimeStarted: bigint('clientTimeStarted', { mode: 'number' }).notNull()
 });
 
 export const gangs = pgTable('gangs', {
@@ -93,7 +93,7 @@ export const groupChats = pgTable('groupChats', {
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
 	guildId: integer('guildId').notNull().references(() => guilds.id, { onDelete: 'cascade' }),
 	timestampMs: bigint('timestampMs', { mode: 'number' }).notNull(),
-	body: varchar('body', { length: 240 }).notNull(),
+	body: varchar('body', { length: 240 }).notNull()
 });
 
 export const guildMembers = pgTable('guildMembers', {
@@ -135,7 +135,7 @@ export const inventories = pgTable('inventories', {
 export const islandUnlocks = pgTable('islandUnlocks', {
 	id: serial('id').primaryKey(),
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
-	islandId: integer('islandId').notNull(),
+	islandId: integer('islandId').notNull()
 });
 
 export const landUnlocks = pgTable('landUnlocks', {
@@ -147,7 +147,7 @@ export const landUnlocks = pgTable('landUnlocks', {
 export const unlockedRuns = pgTable('unlockedRuns', {
 	id: serial('id').primaryKey(),
 	landUnlockId: integer('landUnlockId').notNull().references(() => landUnlocks.id, { onDelete: 'cascade' }),
-	landId: integer('landId').notNull(),
+	landId: integer('landId').notNull()
 });
 
 export const itemUnlocks = pgTable('itemUnlocks', {
@@ -175,7 +175,7 @@ export const producerStates = pgTable('producerStates', {
 	producerId: integer('producerId').notNull(),
 	state: text('state').notNull(),
 	produceTimeSeconds: bigint('produceTimeSeconds', { mode: 'number' }).notNull(),
-	clientTimeStarted: bigint('clientTimeStarted', { mode: 'number' }).notNull(),
+	clientTimeStarted: bigint('clientTimeStarted', { mode: 'number' }).notNull()
 });
 
 export const producingItems = pgTable('producingItems', {
@@ -222,3 +222,24 @@ export const tutorials = pgTable('tutorials', {
 	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
 	tutorialId: text('tutorialId').notNull()
 });
+
+export const redeems = pgTable('redeems', {
+	id: serial('id').primaryKey(),
+	code: varchar('code', { length: 50 }).unique().notNull(),
+	expiration: timestamp('expiration'),
+	limit: integer('limit'),
+	itemTypeId: integer('itemTypeId'),
+	itemCount: integer('itemCount'),
+	characterId: integer('characterId'),
+	skinId: integer('skinId')
+});
+
+export const userRedeems = pgTable('userRedeems', {
+	id: serial('id').primaryKey(),
+	userId: integer('userId').notNull().references(() => users.id, { onDelete: 'cascade' }),
+	redeemId: integer('redeemId').notNull().references(() => redeems.id, { onDelete: 'cascade' }),
+	redeemedAt: timestamp('redeemed_at').defaultNow()
+}, (table) => [
+	uniqueIndex('userRedeemUniqueIndex').on(table.userId, table.redeemId)
+]);
+

@@ -16,11 +16,11 @@ import {
 	powerGems,
 	producers,
 	producerStates,
-	producingItems,
+	producingItems, redeems,
 	relics,
 	shopRotations,
 	skins,
-	tutorials, unlockedRuns,
+	tutorials, unlockedRuns, userRedeems,
 	users
 } from '@/db/schema';
 
@@ -47,6 +47,8 @@ export type Relic = InferSelectModel<typeof relics>;
 export type ShopRotation = InferSelectModel<typeof shopRotations>;
 export type Skin = InferSelectModel<typeof skins>;
 export type Tutorial = InferSelectModel<typeof tutorials>;
+export type Redeem = InferSelectModel<typeof redeems>;
+export type UserRedeem = InferSelectModel<typeof userRedeems>;
 
 export type ProducerStateWithItems = ProducerState & {
 	producingItems: ProducingItem[];

@@ -55,7 +55,7 @@ export async function handleShopApiPurchaseProduct(c: Context<{
 	}
 }
 
-async function createSkins(c: Context<{
+export async function createSkins(c: Context<{
 	Bindings: Env, Variables: Variables
 }>, state: StatePurchaseProductParams, userId: number) {
 	if (!state.progressDiff || !state.progressDiff.characterProgress || !state.progressDiff.characterProgress.length) {
