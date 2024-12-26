@@ -19,7 +19,6 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 // app.use('*', compressResponse);
 app.use(logger(customLogger));
 app.use(dbMiddleware);
-app.use(userAgentMiddleware);
 
 app.get('/api', async (c) => {
 	return c.redirect('/api/v1/app');
@@ -59,13 +58,13 @@ app.route('/api/v1/app', appRoute);
 app.route(apiBase, crashRoute);
 app.route('/public', publicRoute);
 console.log('rota public', '/public');
-app.get(apiEventBase, decompressRequestBody, async (c) => {
+app.get(apiEventBase, userAgentMiddleware, decompressRequestBody, async (c) => {
 	return c.json({
 		message: 'Ok'
 	});
 });
 
-app.get('/v1/install', async (c) => {
+app.get('/v1/install', userAgentMiddleware, async (c) => {
 	return c.json({
 		message: 'Ok'
 	});

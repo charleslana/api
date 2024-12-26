@@ -103,10 +103,11 @@ import { decompressRequestBody } from '@/middleware/decompress-request-body';
 import {
 	handleAppEmailAndPasswordIdentityApiAuthenticate
 } from '@/services/handle-app-email-and-password-identity-api-authenticate';
+import { userAgentMiddleware } from '@/middleware/user-agent-middleware';
 
 export const crashRoute = new Hono<{ Bindings: Env; Variables: Variables }>();
 
-crashRoute.post('/', decompressRequestBody, zValidator('query', z.object({
+crashRoute.post('/', userAgentMiddleware, decompressRequestBody, zValidator('query', z.object({
 	_session: z.string().optional()
 })), zValidator('json', z.array(z.object({
 	jsonrpc: z.string(), id: z.coerce.number(), method: z.string(), params: z.array(z.any())
