@@ -210,7 +210,7 @@ publicRoute.get('/guild/top-trophies', clientAuthMiddleware, async (c) => {
 	}
 });
 
-function parseDurationToSeconds(duration: string): number {
+export function parseDurationToSeconds(duration: string): number {
 	const regex = /^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(\.\d+)?)S)?$/;
 	const match = duration.match(regex);
 	if (!match) return 0;

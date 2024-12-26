@@ -4,6 +4,7 @@ import type { Env, Variables } from '@/lib/types';
 import { and, eq } from 'drizzle-orm';
 import { StateProgressParams } from '@/interfaces/state-params';
 import { PowerGem, User } from '@/db/model';
+import { parseDurationToSeconds } from '@/routes/public';
 
 export async function updateProgress(c: Context<{
 	Bindings: Env, Variables: Variables
@@ -25,6 +26,9 @@ export async function updateProgress(c: Context<{
 			return;
 		}
 		if (Number.isInteger(state.progressDiff.xp) && Number.isInteger(state.progressDiff.level) && Number.isInteger(state.progressDiff.crashPointsEarned)) {
+			const currentRunDurationInSeconds = parseDurationToSeconds(user.runDuration ?? 'PT0S');
+			const newRunDurationInSeconds = parseDurationToSeconds(state.runDuration ?? 'PT0S');
+			const updatedRunDuration = newRunDurationInSeconds > currentRunDurationInSeconds ? state.runDuration : user.runDuration;
 			await db
 				.update(users)
 				.set({
@@ -32,7 +36,7 @@ export async function updateProgress(c: Context<{
 					level: user.level + state.progressDiff.level,
 					crashPointsEarned: user.crashPointsEarned + state.progressDiff.crashPointsEarned,
 					skinId: state.skinId,
-					runDuration: state.runDuration,
+					runDuration: updatedRunDuration
 				})
 				.where(eq(users.id, user.id));
 		}
@@ -46,13 +50,13 @@ export async function updateProgress(c: Context<{
 				if (item.numPowerGems > 0) {
 					if (!existingItem) {
 						return db.insert(powerGems).values({
-							userId: user.id, islandId: item.islandId, numPowerGems: item.numPowerGems,
+							userId: user.id, islandId: item.islandId, numPowerGems: item.numPowerGems
 						}).returning();
 					} else {
 						return db
 							.update(powerGems)
 							.set({
-								numPowerGems: existingItem.numPowerGems + item.numPowerGems,
+								numPowerGems: existingItem.numPowerGems + item.numPowerGems
 							})
 							.where(and(eq(powerGems.userId, user.id), eq(powerGems.islandId, item.islandId))).returning();
 					}
