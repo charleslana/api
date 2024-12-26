@@ -140,7 +140,7 @@ publicRoute.get('/player/top-duration', clientAuthMiddleware, async (c) => {
 			})
 			.from(users)
 			.orderBy(sql`${users.runDuration}
-			ASC`)
+			DESC NULLS LAST`)
 			.limit(100);
 		return c.json(topPlayers);
 	} catch (error) {
