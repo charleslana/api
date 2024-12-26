@@ -138,27 +138,19 @@ publicRoute.get('/player/top-duration', clientAuthMiddleware, async (c) => {
 				name: users.name,
 				runDuration: users.runDuration
 			})
-			.from(users);
-		const processedPlayers = topPlayers.map(player => {
-			const totalSeconds = player.runDuration ? parseDurationToSeconds(player.runDuration) : 0;
-			return {
-				name: player.name,
-				runDuration: player.runDuration,
-				totalSeconds
-			};
-		});
-		processedPlayers.sort((a, b) => b.totalSeconds - a.totalSeconds);
-		const top100Players = processedPlayers.slice(0, 100);
-		return c.json(top100Players);
+			.from(users)
+			.orderBy(sql`${users.runDuration}
+			ASC`)
+			.limit(100);
+		return c.json(topPlayers);
 	} catch (error) {
-		console.error('Error fetching top players by duration:', error);
+		console.error('Error fetching top players:', error);
 		return c.json({
 			error: true,
 			message: 'Failed to fetch top players'
 		}, 500);
 	}
 });
-
 
 publicRoute.get('/guild/top-trophies', clientAuthMiddleware, async (c) => {
 	const db = c.get('db');

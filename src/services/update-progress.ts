@@ -26,9 +26,9 @@ export async function updateProgress(c: Context<{
 			return;
 		}
 		if (Number.isInteger(state.progressDiff.xp) && Number.isInteger(state.progressDiff.level) && Number.isInteger(state.progressDiff.crashPointsEarned)) {
-			const currentRunDurationInSeconds = parseDurationToSeconds(user.runDuration ?? 'PT0S');
+			const currentRunDurationInSeconds = user.runDuration ?? 0;
 			const newRunDurationInSeconds = parseDurationToSeconds(state.runDuration ?? 'PT0S');
-			const updatedRunDuration = newRunDurationInSeconds > currentRunDurationInSeconds ? state.runDuration : user.runDuration;
+			const updatedRunDuration = newRunDurationInSeconds > currentRunDurationInSeconds ? newRunDurationInSeconds : user.runDuration;
 			await db
 				.update(users)
 				.set({

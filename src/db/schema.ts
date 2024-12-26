@@ -8,7 +8,8 @@ import {
 	timestamp,
 	uniqueIndex,
 	varchar,
-	bigint
+	bigint,
+	doublePrecision
 } from 'drizzle-orm/pg-core';
 import { SQL, sql } from 'drizzle-orm';
 import { createInsertSchema } from 'drizzle-zod';
@@ -28,7 +29,7 @@ export const users = pgTable('users', {
 	crashPointsEarned: integer('crashPointsEarned').default(0).notNull(),
 	skinId: integer('skinId').default(81329).notNull(),
 	guildId: integer('guildId'),
-	runDuration: text('runDuration'),
+	runDuration: doublePrecision('runDuration'),
 	createdAt: timestamp('created_at').defaultNow(),
 	updatedAt: timestamp('updated_at')
 		.defaultNow()
