@@ -133,14 +133,13 @@ publicRoute.get('/player/top-points', clientAuthMiddleware, async (c) => {
 publicRoute.get('/player/top-duration', clientAuthMiddleware, async (c) => {
 	const db = c.get('db');
 	try {
-		const players = await db
+		const topPlayers = await db
 			.select({
 				name: users.name,
 				runDuration: users.runDuration
 			})
-			.from(users)
-			.limit(100);
-		const processedPlayers = players.map(player => {
+			.from(users);
+		const processedPlayers = topPlayers.map(player => {
 			const totalSeconds = player.runDuration ? parseDurationToSeconds(player.runDuration) : 0;
 			return {
 				name: player.name,
@@ -149,7 +148,8 @@ publicRoute.get('/player/top-duration', clientAuthMiddleware, async (c) => {
 			};
 		});
 		processedPlayers.sort((a, b) => b.totalSeconds - a.totalSeconds);
-		return c.json(processedPlayers);
+		const top100Players = processedPlayers.slice(0, 100);
+		return c.json(top100Players);
 	} catch (error) {
 		console.error('Error fetching top players by duration:', error);
 		return c.json({
@@ -158,6 +158,7 @@ publicRoute.get('/player/top-duration', clientAuthMiddleware, async (c) => {
 		}, 500);
 	}
 });
+
 
 publicRoute.get('/guild/top-trophies', clientAuthMiddleware, async (c) => {
 	const db = c.get('db');
